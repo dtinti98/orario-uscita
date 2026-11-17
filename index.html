@@ -11,16 +11,16 @@
 <title>Quando stacco</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;1,9..144,500;1,9..144,600&family=Caveat:wght@500;700&display=swap">
 <style>
-/* Layout: una colonna stretta. Vista "In sede": uscita, orari, zainetto apribile. Vista "Smart working": calendario e conteggio del mese */
+/* Layout: una colonna stretta. Vista "In sede": uscita, orari, saldi apribili (zainetto, ferie, PAR). Vista "Smart working": calendario (smart working e ferie) e conteggio del mese */
 :root { padding-block: env(safe-area-inset-top,0px) env(safe-area-inset-bottom,0px);
-  --bg: #f7f2e8; --surface: #fffdf7; --fg: #3e4a40; --muted: #7f8b80; --line: #c9bfa8; --accent: #5e8b68; --accent-soft: #e5efdc; --warn: #c07454; --sw: #8079bf; --sw-soft: #ece8f7; --pink: #f5dede; --pencil: #a99f8a; --twig: #8b6243;
+  --bg: #f7f2e8; --surface: #fffdf7; --fg: #3e4a40; --muted: #7f8b80; --line: #c9bfa8; --accent: #5e8b68; --accent-soft: #e5efdc; --warn: #c07454; --sw: #8079bf; --sw-soft: #ece8f7; --fe: #a8741f; --fe-soft: #f8ead0; --par: #5f87a0; --pink: #f5dede; --pencil: #a99f8a; --twig: #8b6243;
   --display: "Fraunces", Georgia, serif; --hand: "Caveat", cursive;
   --body: "Quicksand", ui-sans-serif, system-ui, -apple-system, sans-serif;
 }
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
-  --bg: #1f231f; --surface: #2a2f2a; --fg: #ece6d9; --muted: #a9b0a2; --line: #4a5048; --accent: #a8cfa9; --accent-soft: #2e3a2f; --warn: #e6a587; --sw: #bdb6ee; --sw-soft: #34324a; --pink: #4a3536; --pencil: #7d8274; --twig: #c9a27c; color-scheme: dark } }
+  --bg: #1f231f; --surface: #2a2f2a; --fg: #ece6d9; --muted: #a9b0a2; --line: #4a5048; --accent: #a8cfa9; --accent-soft: #2e3a2f; --warn: #e6a587; --sw: #bdb6ee; --sw-soft: #34324a; --fe: #e9bf74; --fe-soft: #45391f; --par: #a3c6dc; --pink: #4a3536; --pencil: #7d8274; --twig: #c9a27c; color-scheme: dark } }
 :root[data-theme="dark"] {
-  --bg: #1f231f; --surface: #2a2f2a; --fg: #ece6d9; --muted: #a9b0a2; --line: #4a5048; --accent: #a8cfa9; --accent-soft: #2e3a2f; --warn: #e6a587; --sw: #bdb6ee; --sw-soft: #34324a; --pink: #4a3536; --pencil: #7d8274; --twig: #c9a27c; color-scheme: dark }
+  --bg: #1f231f; --surface: #2a2f2a; --fg: #ece6d9; --muted: #a9b0a2; --line: #4a5048; --accent: #a8cfa9; --accent-soft: #2e3a2f; --warn: #e6a587; --sw: #bdb6ee; --sw-soft: #34324a; --fe: #e9bf74; --fe-soft: #45391f; --par: #a3c6dc; --pink: #4a3536; --pencil: #7d8274; --twig: #c9a27c; color-scheme: dark }
 
 body { margin: 0; background: var(--bg); color: var(--fg); font-family: var(--body); font-size: 15px; }
 main { max-width: 440px; margin: 0 auto; padding-block: 28px 40px;
@@ -250,6 +250,36 @@ details.extra > summary { font-style: italic; font-weight: 600; font-size: 19px;
 .dots i.on:nth-child(9) { -webkit-mask-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%20120%20112%22%3E%3Cdefs%3E%3Cmask%20id%3D%22m%22%3E%3Crect%20width%3D%22120%22%20height%3D%22112%22%20fill%3D%22%23fff%22/%3E%3Cg%20fill%3D%22%23000%22%3E%3Cpath%20d%3D%22M2%2034.5%20Q%2014%2040.2%2026%2047%20Q%2014%2046.8%202%2045.5%20Z%22/%3E%3Cpath%20d%3D%22M2%2058.5%20Q%2015%2062.2%2028%2067%20Q%2015%2068.8%202%2069.5%20Z%22/%3E%3Cpath%20d%3D%22M12%2085%20Q%2022%2084.5%2032%2085%20Q%2022%2090.5%2012%2095%20Z%22/%3E%3Cpath%20d%3D%22M118%2034.5%20Q%20106%2040.2%2094%2047%20Q%20106%2046.8%20118%2045.5%20Z%22/%3E%3Cpath%20d%3D%22M118%2058.5%20Q%20105%2062.2%2092%2067%20Q%20105%2068.8%20118%2069.5%20Z%22/%3E%3Cpath%20d%3D%22M108%2085%20Q%2098%2084.5%2088%2085%20Q%2098%2090.5%20108%2095%20Z%22/%3E%3Cellipse%20cx%3D%2244%22%20cy%3D%2228%22%20rx%3D%224%22%20ry%3D%227%22%20transform%3D%22rotate%28-30%2044%2028%29%22/%3E%3Cellipse%20cx%3D%2242%22%20cy%3D%2254%22%20rx%3D%225%22%20ry%3D%228.5%22%20transform%3D%22rotate%28-35%2042%2054%29%22/%3E%3Cellipse%20cx%3D%2244%22%20cy%3D%2278%22%20rx%3D%224.5%22%20ry%3D%227.5%22%20transform%3D%22rotate%28-40%2044%2078%29%22/%3E%3Cellipse%20cx%3D%2276%22%20cy%3D%2228%22%20rx%3D%224%22%20ry%3D%227%22%20transform%3D%22rotate%2830%2076%2028%29%22/%3E%3Cellipse%20cx%3D%2278%22%20cy%3D%2254%22%20rx%3D%225%22%20ry%3D%228.5%22%20transform%3D%22rotate%2835%2078%2054%29%22/%3E%3Cellipse%20cx%3D%2276%22%20cy%3D%2278%22%20rx%3D%224.5%22%20ry%3D%227.5%22%20transform%3D%22rotate%2840%2076%2078%29%22/%3E%3Cpath%20d%3D%22M58.5%2096%20h3%20v-86%20h-3z%22/%3E%3C/g%3E%3C/mask%3E%3C/defs%3E%3Cpath%20d%3D%22M60%2096%20C%2050%20106%2C%208%20102%2C%206%2064%20C%204%2034%2C%2032%2010%2C%2060%206%20C%2088%2010%2C%20116%2034%2C%20114%2064%20C%20112%20102%2C%2070%20106%2C%2060%2096%20Z%22%20fill%3D%22%23000%22%20mask%3D%22url%28%23m%29%22/%3E%3Cpath%20d%3D%22M60%2096%20L60%20112%22%20stroke%3D%22%23000%22%20stroke-width%3D%227%22/%3E%3C/svg%3E"); mask-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%20120%20112%22%3E%3Cdefs%3E%3Cmask%20id%3D%22m%22%3E%3Crect%20width%3D%22120%22%20height%3D%22112%22%20fill%3D%22%23fff%22/%3E%3Cg%20fill%3D%22%23000%22%3E%3Cpath%20d%3D%22M2%2034.5%20Q%2014%2040.2%2026%2047%20Q%2014%2046.8%202%2045.5%20Z%22/%3E%3Cpath%20d%3D%22M2%2058.5%20Q%2015%2062.2%2028%2067%20Q%2015%2068.8%202%2069.5%20Z%22/%3E%3Cpath%20d%3D%22M12%2085%20Q%2022%2084.5%2032%2085%20Q%2022%2090.5%2012%2095%20Z%22/%3E%3Cpath%20d%3D%22M118%2034.5%20Q%20106%2040.2%2094%2047%20Q%20106%2046.8%20118%2045.5%20Z%22/%3E%3Cpath%20d%3D%22M118%2058.5%20Q%20105%2062.2%2092%2067%20Q%20105%2068.8%20118%2069.5%20Z%22/%3E%3Cpath%20d%3D%22M108%2085%20Q%2098%2084.5%2088%2085%20Q%2098%2090.5%20108%2095%20Z%22/%3E%3Cellipse%20cx%3D%2244%22%20cy%3D%2228%22%20rx%3D%224%22%20ry%3D%227%22%20transform%3D%22rotate%28-30%2044%2028%29%22/%3E%3Cellipse%20cx%3D%2242%22%20cy%3D%2254%22%20rx%3D%225%22%20ry%3D%228.5%22%20transform%3D%22rotate%28-35%2042%2054%29%22/%3E%3Cellipse%20cx%3D%2244%22%20cy%3D%2278%22%20rx%3D%224.5%22%20ry%3D%227.5%22%20transform%3D%22rotate%28-40%2044%2078%29%22/%3E%3Cellipse%20cx%3D%2276%22%20cy%3D%2228%22%20rx%3D%224%22%20ry%3D%227%22%20transform%3D%22rotate%2830%2076%2028%29%22/%3E%3Cellipse%20cx%3D%2278%22%20cy%3D%2254%22%20rx%3D%225%22%20ry%3D%228.5%22%20transform%3D%22rotate%2835%2078%2054%29%22/%3E%3Cellipse%20cx%3D%2276%22%20cy%3D%2278%22%20rx%3D%224.5%22%20ry%3D%227.5%22%20transform%3D%22rotate%2840%2076%2078%29%22/%3E%3Cpath%20d%3D%22M58.5%2096%20h3%20v-86%20h-3z%22/%3E%3C/g%3E%3C/mask%3E%3C/defs%3E%3Cpath%20d%3D%22M60%2096%20C%2050%20106%2C%208%20102%2C%206%2064%20C%204%2034%2C%2032%2010%2C%2060%206%20C%2088%2010%2C%20116%2034%2C%20114%2064%20C%20112%20102%2C%2070%20106%2C%2060%2096%20Z%22%20fill%3D%22%23000%22%20mask%3D%22url%28%23m%29%22/%3E%3Cpath%20d%3D%22M60%2096%20L60%20112%22%20stroke%3D%22%23000%22%20stroke-width%3D%227%22/%3E%3C/svg%3E"); }
 .dots i:nth-child(10) { -webkit-mask-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%20120%20112%22%3E%3Cdefs%3E%3Cmask%20id%3D%22m%22%3E%3Crect%20width%3D%22120%22%20height%3D%22112%22%20fill%3D%22%23fff%22/%3E%3Cg%20fill%3D%22%23000%22%3E%3Cpath%20d%3D%22M22%2035%20Q%2034%2042%2046%2050%20Q%2034%2048%2022%2045%20Z%22/%3E%3Cpath%20d%3D%22M20%2060.5%20Q%2034%2065.7%2048%2072%20Q%2034%2072.3%2020%2071.5%20Z%22/%3E%3Cpath%20d%3D%22M30%2087.5%20Q%2041%2088.3%2052%2090%20Q%2041%2093.7%2030%2096.5%20Z%22/%3E%3Cpath%20d%3D%22M98%2035%20Q%2086%2042%2074%2050%20Q%2086%2048%2098%2045%20Z%22/%3E%3Cpath%20d%3D%22M100%2060.5%20Q%2086%2065.7%2072%2072%20Q%2086%2072.3%20100%2071.5%20Z%22/%3E%3Cpath%20d%3D%22M90%2087.5%20Q%2079%2088.3%2068%2090%20Q%2079%2093.7%2090%2096.5%20Z%22/%3E%3C/g%3E%3C/mask%3E%3C/defs%3E%3Cpath%20d%3D%22M60%20104%20C%2034%20100%2C%2022%2070%2C%2026%2044%20C%2030%2022%2C%2046%208%2C%2060%204%20C%2076%208%2C%2092%2022%2C%2095%2044%20C%2098%2072%2C%2086%20100%2C%2060%20104%20Z%22%20fill%3D%22none%22%20stroke%3D%22%23000%22%20stroke-width%3D%227%22%20stroke-dasharray%3D%2212%209%22%20mask%3D%22url%28%23m%29%22/%3E%3Cg%20fill%3D%22none%22%20stroke%3D%22%23000%22%20stroke-width%3D%225%22%3E%3Cellipse%20cx%3D%2250%22%20cy%3D%2230%22%20rx%3D%222.6%22%20ry%3D%225%22%20transform%3D%22rotate%28-20%2050%2030%29%22/%3E%3Cellipse%20cx%3D%2270%22%20cy%3D%2230%22%20rx%3D%222.6%22%20ry%3D%225%22%20transform%3D%22rotate%2820%2070%2030%29%22/%3E%3C/g%3E%3Cpath%20d%3D%22M60%2096%20L60%20112%22%20stroke%3D%22%23000%22%20stroke-width%3D%227%22/%3E%3C/svg%3E"); mask-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%20120%20112%22%3E%3Cdefs%3E%3Cmask%20id%3D%22m%22%3E%3Crect%20width%3D%22120%22%20height%3D%22112%22%20fill%3D%22%23fff%22/%3E%3Cg%20fill%3D%22%23000%22%3E%3Cpath%20d%3D%22M22%2035%20Q%2034%2042%2046%2050%20Q%2034%2048%2022%2045%20Z%22/%3E%3Cpath%20d%3D%22M20%2060.5%20Q%2034%2065.7%2048%2072%20Q%2034%2072.3%2020%2071.5%20Z%22/%3E%3Cpath%20d%3D%22M30%2087.5%20Q%2041%2088.3%2052%2090%20Q%2041%2093.7%2030%2096.5%20Z%22/%3E%3Cpath%20d%3D%22M98%2035%20Q%2086%2042%2074%2050%20Q%2086%2048%2098%2045%20Z%22/%3E%3Cpath%20d%3D%22M100%2060.5%20Q%2086%2065.7%2072%2072%20Q%2086%2072.3%20100%2071.5%20Z%22/%3E%3Cpath%20d%3D%22M90%2087.5%20Q%2079%2088.3%2068%2090%20Q%2079%2093.7%2090%2096.5%20Z%22/%3E%3C/g%3E%3C/mask%3E%3C/defs%3E%3Cpath%20d%3D%22M60%20104%20C%2034%20100%2C%2022%2070%2C%2026%2044%20C%2030%2022%2C%2046%208%2C%2060%204%20C%2076%208%2C%2092%2022%2C%2095%2044%20C%2098%2072%2C%2086%20100%2C%2060%20104%20Z%22%20fill%3D%22none%22%20stroke%3D%22%23000%22%20stroke-width%3D%227%22%20stroke-dasharray%3D%2212%209%22%20mask%3D%22url%28%23m%29%22/%3E%3Cg%20fill%3D%22none%22%20stroke%3D%22%23000%22%20stroke-width%3D%225%22%3E%3Cellipse%20cx%3D%2250%22%20cy%3D%2230%22%20rx%3D%222.6%22%20ry%3D%225%22%20transform%3D%22rotate%28-20%2050%2030%29%22/%3E%3Cellipse%20cx%3D%2270%22%20cy%3D%2230%22%20rx%3D%222.6%22%20ry%3D%225%22%20transform%3D%22rotate%2820%2070%2030%29%22/%3E%3C/g%3E%3Cpath%20d%3D%22M60%2096%20L60%20112%22%20stroke%3D%22%23000%22%20stroke-width%3D%227%22/%3E%3C/svg%3E"); }
 .dots i.on:nth-child(10) { -webkit-mask-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%20120%20112%22%3E%3Cdefs%3E%3Cmask%20id%3D%22m%22%3E%3Crect%20width%3D%22120%22%20height%3D%22112%22%20fill%3D%22%23fff%22/%3E%3Cg%20fill%3D%22%23000%22%3E%3Cpath%20d%3D%22M22%2035%20Q%2034%2042%2046%2050%20Q%2034%2048%2022%2045%20Z%22/%3E%3Cpath%20d%3D%22M20%2060.5%20Q%2034%2065.7%2048%2072%20Q%2034%2072.3%2020%2071.5%20Z%22/%3E%3Cpath%20d%3D%22M30%2087.5%20Q%2041%2088.3%2052%2090%20Q%2041%2093.7%2030%2096.5%20Z%22/%3E%3Cpath%20d%3D%22M98%2035%20Q%2086%2042%2074%2050%20Q%2086%2048%2098%2045%20Z%22/%3E%3Cpath%20d%3D%22M100%2060.5%20Q%2086%2065.7%2072%2072%20Q%2086%2072.3%20100%2071.5%20Z%22/%3E%3Cpath%20d%3D%22M90%2087.5%20Q%2079%2088.3%2068%2090%20Q%2079%2093.7%2090%2096.5%20Z%22/%3E%3Cellipse%20cx%3D%2250%22%20cy%3D%2230%22%20rx%3D%222.6%22%20ry%3D%225%22%20transform%3D%22rotate%28-20%2050%2030%29%22/%3E%3Cellipse%20cx%3D%2270%22%20cy%3D%2230%22%20rx%3D%222.6%22%20ry%3D%225%22%20transform%3D%22rotate%2820%2070%2030%29%22/%3E%3Cpath%20d%3D%22M58.5%2096%20h3%20v-86%20h-3z%22/%3E%3C/g%3E%3C/mask%3E%3C/defs%3E%3Cpath%20d%3D%22M60%20104%20C%2034%20100%2C%2022%2070%2C%2026%2044%20C%2030%2022%2C%2046%208%2C%2060%204%20C%2076%208%2C%2092%2022%2C%2095%2044%20C%2098%2072%2C%2086%20100%2C%2060%20104%20Z%22%20fill%3D%22%23000%22%20mask%3D%22url%28%23m%29%22/%3E%3Cpath%20d%3D%22M60%2096%20L60%20112%22%20stroke%3D%22%23000%22%20stroke-width%3D%227%22/%3E%3C/svg%3E"); mask-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%20120%20112%22%3E%3Cdefs%3E%3Cmask%20id%3D%22m%22%3E%3Crect%20width%3D%22120%22%20height%3D%22112%22%20fill%3D%22%23fff%22/%3E%3Cg%20fill%3D%22%23000%22%3E%3Cpath%20d%3D%22M22%2035%20Q%2034%2042%2046%2050%20Q%2034%2048%2022%2045%20Z%22/%3E%3Cpath%20d%3D%22M20%2060.5%20Q%2034%2065.7%2048%2072%20Q%2034%2072.3%2020%2071.5%20Z%22/%3E%3Cpath%20d%3D%22M30%2087.5%20Q%2041%2088.3%2052%2090%20Q%2041%2093.7%2030%2096.5%20Z%22/%3E%3Cpath%20d%3D%22M98%2035%20Q%2086%2042%2074%2050%20Q%2086%2048%2098%2045%20Z%22/%3E%3Cpath%20d%3D%22M100%2060.5%20Q%2086%2065.7%2072%2072%20Q%2086%2072.3%20100%2071.5%20Z%22/%3E%3Cpath%20d%3D%22M90%2087.5%20Q%2079%2088.3%2068%2090%20Q%2079%2093.7%2090%2096.5%20Z%22/%3E%3Cellipse%20cx%3D%2250%22%20cy%3D%2230%22%20rx%3D%222.6%22%20ry%3D%225%22%20transform%3D%22rotate%28-20%2050%2030%29%22/%3E%3Cellipse%20cx%3D%2270%22%20cy%3D%2230%22%20rx%3D%222.6%22%20ry%3D%225%22%20transform%3D%22rotate%2820%2070%2030%29%22/%3E%3Cpath%20d%3D%22M58.5%2096%20h3%20v-86%20h-3z%22/%3E%3C/g%3E%3C/mask%3E%3C/defs%3E%3Cpath%20d%3D%22M60%20104%20C%2034%20100%2C%2022%2070%2C%2026%2044%20C%2030%2022%2C%2046%208%2C%2060%204%20C%2076%208%2C%2092%2022%2C%2095%2044%20C%2098%2072%2C%2086%20100%2C%2060%20104%20Z%22%20fill%3D%22%23000%22%20mask%3D%22url%28%23m%29%22/%3E%3Cpath%20d%3D%22M60%2096%20L60%20112%22%20stroke%3D%22%23000%22%20stroke-width%3D%227%22/%3E%3C/svg%3E"); }
+
+/* Ferie e permessi: giorni nel calendario (pieni = giornata intera, bordo = a ore) e saldi Ferie e PAR */
+.cal .where { margin: 0; }
+.where #pickSw:checked + label { background: var(--sw); color: var(--surface); }
+.where #pickFe:checked + label { background: var(--fe); color: var(--surface); }
+.cal-grid button.fe { background: var(--fe); color: var(--surface); }
+.cal-grid button.fe.plan { background: var(--fe-soft); color: var(--fe); border: 1.5px dashed var(--fe); }
+.cal-grid button.fe.part { border: 2px solid var(--fe); }
+.cal-grid button.fe.part:not(.sw) { background: transparent; color: var(--fe); }
+.cal-grid button.fe.part.plan { border: 2px dashed var(--fe); }
+.cal-grid button.sel { outline: 2.5px solid var(--fe); outline-offset: 1px; }
+.legend .l4 { background: var(--fe); } .legend .l5 { border: 2px solid var(--fe); box-sizing: border-box; }
+button.fe-btn { background: var(--fe); border-color: var(--fe); color: var(--surface); }
+.fepanel { display: flex; flex-direction: column; gap: 10px; padding: 12px 14px; background: var(--fe-soft); border: 2px dashed var(--fe); border-radius: 20px 24px 18px 26px / 24px 18px 26px 20px; }
+.fehead { font: 600 18px var(--display); font-style: italic; color: var(--fe); }
+.fehead::first-letter { text-transform: uppercase; }
+.ferow { display: grid; grid-template-columns: 1fr auto; gap: 10px; align-items: center; }
+.ferow + .ferow { border-top: 1.5px dashed var(--line); padding-top: 8px; }
+.ferow label { font-weight: 600; line-height: 1.3; }
+.ferow label .sub { font-weight: 500; }
+select { font: 500 16px var(--display); font-variant-numeric: tabular-nums; color: var(--fg); background: var(--bg); border: 1.5px dashed var(--line); border-radius: 12px; padding: 6px 8px; }
+select:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.fetot { font-weight: 600; font-size: 14px; }
+.fecard { background: var(--fe-soft); border-color: var(--fe); }
+.fecard .big2 { color: var(--fe); }
+.stat.fe .big { color: var(--fe); } .stat.par .big { color: var(--par); }
+.stats .big { font-size: 24px; line-height: 1.1; }
+.felist { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 4px; font-size: 14px; }
+.felist .d { font-weight: 600; margin-right: 6px; }
+.log .fe-t { font-weight: 600; color: var(--fe); }
 </style>
 </head>
 <body>
@@ -306,6 +336,12 @@ details.extra > summary { font-style: italic; font-weight: 600; font-size: 19px;
     <button type="button" class="primary sw-btn quick" id="markToday" hidden>Segna oggi come smart working</button>
   </section>
 
+  <section class="swcard fecard" id="feCard" hidden aria-live="polite">
+    <span class="label">Oggi</span>
+    <span class="big2"><svg class="ic big-ic" viewBox="0 0 28 28" aria-hidden="true" filter="url(#pencil)" fill="none" stroke-linecap="round" stroke-linejoin="round"><circle cx="14" cy="14" r="5.5" fill="#f6dc94" stroke="#c99a3e" stroke-width="1.6"/><path d="M14 3.5v3M14 21.5v3M3.5 14h3M21.5 14h3M6.6 6.6l2.1 2.1M19.3 19.3l2.1 2.1M6.6 21.4l2.1-2.1M19.3 8.7l2.1-2.1" stroke="#c99a3e" stroke-width="1.6"/></svg>Ferie</span>
+    <span class="sub2" id="feCardTxt"></span>
+  </section>
+
   <section class="card">
     <div class="where" role="radiogroup" aria-label="Dove lavori oggi">
       <input type="radio" name="loc" id="sede" checked><label for="sede"><svg class="ic" viewBox="0 0 28 28" aria-hidden="true" filter="url(#pencil)" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M7 25 v-19 h10 v19" stroke="currentColor" stroke-width="1.7"/><path d="M10 10 h1 M13 10 h1 M10 14 h1 M13 14 h1 M10 18 h1 M13 18 h1" stroke="currentColor" stroke-width="1.8"/><path d="M4 25 h20" stroke="currentColor" stroke-width="1.6"/><path d="M21 25 v-5" stroke="#5e8b68" stroke-width="1.4"/><path d="M21 21 c-3 0 -4 -2 -4 -4 c3 0 4 2 4 4z M21 22 c3 0 4 -2 4 -4 c-3 0 -4 2 -4 4z" fill="#cfe3c4" stroke="#5e8b68" stroke-width="1"/></svg>In sede</label>
@@ -348,12 +384,31 @@ details.extra > summary { font-style: italic; font-weight: 600; font-size: 19px;
       <button type="button" id="next" aria-label="Mese successivo">›</button>
     </div>
     <div class="cal" id="cal">
+      <div class="where" id="calPick" role="radiogroup" aria-label="Cosa segni nel calendario" hidden>
+        <input type="radio" name="pick" id="pickSw" checked><label for="pickSw">Smart working</label>
+        <input type="radio" name="pick" id="pickFe"><label for="pickFe">Ferie</label>
+      </div>
       <div class="cal-grid" id="calGrid"></div>
-      <div class="legend"><span><i class="l1"></i>Smart working fatto</span><span><i class="l2"></i>Programmato</span></div>
+      <div class="legend"><span><i class="l1"></i>Smart working fatto</span><span><i class="l2"></i>Programmato</span><span><i class="l4"></i>Ferie</span><span><i class="l5"></i>Ferie a ore</span></div>
       <span class="sub" id="calHint"></span>
       <span class="calmsg" id="calMsg"></span>
+      <div class="fepanel" id="fePanel" hidden>
+        <span class="fehead" id="feDay"></span>
+        <span class="sub">Scegli quante ore prendere e da dove.</span>
+        <div class="ferow"><label for="fe_ferie">Ferie<br><span class="sub" id="feav_ferie"></span></label><select id="fe_ferie"></select></div>
+        <div class="ferow"><label for="fe_zaino">Zainetto<br><span class="sub" id="feav_zaino"></span></label><select id="fe_zaino"></select></div>
+        <div class="ferow"><label for="fe_par">PAR<br><span class="sub" id="feav_par"></span></label><select id="fe_par"></select></div>
+        <div class="ferow"><label for="fe_giust">Giustificativo<br><span class="sub" id="feav_giust"></span></label><select id="fe_giust"></select></div>
+        <span class="fetot" id="feTot"></span>
+        <span class="calmsg" id="feMsg"></span>
+        <div class="calbtns">
+          <button type="button" class="primary fe-btn" id="feOk">Conferma giorno</button>
+          <button type="button" id="feDel">Togli ferie</button>
+          <button type="button" id="feClose">Chiudi</button>
+        </div>
+      </div>
       <div class="calbtns">
-        <button type="button" class="primary sw-btn" id="editSw">Seleziona giorni di smart working</button>
+        <button type="button" class="primary sw-btn" id="editSw">Modifica calendario</button>
         <button type="button" class="primary sw-btn" id="saveSw" hidden>Salva</button>
         <button type="button" id="cancelSw" hidden>Annulla</button>
       </div>
@@ -364,6 +419,11 @@ details.extra > summary { font-style: italic; font-weight: 600; font-size: 19px;
       <div class="dots" id="swDots"></div>
       <span class="sub" id="swLeft"></span>
     </div>
+    <div class="stat fe">
+      <span class="label"><svg class="ic" viewBox="0 0 28 28" aria-hidden="true" filter="url(#pencil)" fill="none" stroke-linecap="round" stroke-linejoin="round"><circle cx="14" cy="14" r="5.5" fill="#f6dc94" stroke="#c99a3e" stroke-width="1.6"/><path d="M14 3.5v3M14 21.5v3M3.5 14h3M21.5 14h3M6.6 6.6l2.1 2.1M19.3 19.3l2.1 2.1M6.6 21.4l2.1-2.1M19.3 8.7l2.1-2.1" stroke="#c99a3e" stroke-width="1.6"/></svg>Ferie e permessi del mese</span>
+      <ul class="felist" id="feList"></ul>
+      <span class="sub" id="feBal"></span>
+    </div>
     </div>
   </div>
 
@@ -373,7 +433,7 @@ details.extra > summary { font-style: italic; font-weight: 600; font-size: 19px;
   </div>
 
   <details class="extra" id="extra">
-    <summary><span class="sumt"><svg class="ic" viewBox="0 0 28 28" aria-hidden="true" filter="url(#pencil)" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12 h13 v11 a2 2 0 0 1 -2 2 h-9 a2 2 0 0 1 -2 -2z" fill="#d9e7f0" stroke="#6f97b0" stroke-width="1.5"/><path d="M18 15 l7 -6" stroke="#6f97b0" stroke-width="1.8"/><path d="M8 12 c0 -5 7 -5 7 0" stroke="#6f97b0" stroke-width="1.5"/><path d="M26 11 v2 M24 13 v2 M26 16 v2" stroke="#8fbad3" stroke-width="1.4" stroke-dasharray="1 2"/></svg>Zainetto</span><span class="sum" id="sumLine"></span></summary>
+    <summary><span class="sumt"><svg class="ic" viewBox="0 0 28 28" aria-hidden="true" filter="url(#pencil)" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12 h13 v11 a2 2 0 0 1 -2 2 h-9 a2 2 0 0 1 -2 -2z" fill="#d9e7f0" stroke="#6f97b0" stroke-width="1.5"/><path d="M18 15 l7 -6" stroke="#6f97b0" stroke-width="1.8"/><path d="M8 12 c0 -5 7 -5 7 0" stroke="#6f97b0" stroke-width="1.5"/><path d="M26 11 v2 M24 13 v2 M26 16 v2" stroke="#8fbad3" stroke-width="1.4" stroke-dasharray="1 2"/></svg>Zainetto, ferie e PAR</span><span class="sum" id="sumLine"></span></summary>
     <div class="extra-body">
     <div class="monthhead">
       <button type="button" id="zPrev" aria-label="Mese precedente">‹</button>
@@ -385,6 +445,10 @@ details.extra > summary { font-style: italic; font-weight: 600; font-size: 19px;
       <span class="big" id="zTotal">0 min</span>
       <span class="sub" id="zMonth"></span>
     </div>
+    <div class="stats">
+      <div class="stat fe"><span class="label"><svg class="ic" viewBox="0 0 28 28" aria-hidden="true" filter="url(#pencil)" fill="none" stroke-linecap="round" stroke-linejoin="round"><circle cx="14" cy="14" r="5.5" fill="#f6dc94" stroke="#c99a3e" stroke-width="1.6"/><path d="M14 3.5v3M14 21.5v3M3.5 14h3M21.5 14h3M6.6 6.6l2.1 2.1M19.3 19.3l2.1 2.1M6.6 21.4l2.1-2.1M19.3 8.7l2.1-2.1" stroke="#c99a3e" stroke-width="1.6"/></svg>Ferie</span><span class="big" id="feTotal">0 min</span><span class="sub" id="feSub"></span></div>
+      <div class="stat par"><span class="label"><svg class="ic" viewBox="0 0 28 28" aria-hidden="true" filter="url(#pencil)" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M8 4h12M8 24h12" stroke="#6f97b0" stroke-width="1.8"/><path d="M9.5 4c0 6 4.5 7 4.5 10s-4.5 4-4.5 10h9c0-6-4.5-7-4.5-10s4.5-4 4.5-10z" fill="#d9e7f0" stroke="#6f97b0" stroke-width="1.5"/><path d="M11 22.5h6l-3-3z" fill="#e9d9bf" stroke="#a99f8a" stroke-width="1"/></svg>PAR</span><span class="big" id="parTotal">0 min</span><span class="sub" id="parSub"></span></div>
+    </div>
     <div class="card">
       <div class="actions use">
         <label for="useMin">Usa dallo zainetto</label>
@@ -394,10 +458,11 @@ details.extra > summary { font-style: italic; font-weight: 600; font-size: 19px;
       </div>
       <div class="actions use setbal">
         <span class="setlbl">Modifica saldo</span>
+        <select id="setWhich" aria-label="Quale saldo"><option value="zaino">Zainetto</option><option value="ferie">Ferie</option><option value="par">PAR</option></select>
         <span class="hm"><input type="number" id="setH" min="0" step="1" inputmode="numeric" placeholder="ore" aria-label="Ore"><span>h</span>
         <input type="number" id="setM" min="0" max="59" step="1" inputmode="numeric" placeholder="min" aria-label="Minuti"><span>min</span></span>
         <button type="button" id="setBtn">Imposta</button>
-        <span class="msg" id="setMsg">Per inserire i minuti che hai già o correggere il saldo.</span>
+        <span class="msg" id="setMsg">Per inserire le ore che hai già o correggere un saldo.</span>
       </div>
     </div>
     <div class="card">
@@ -408,8 +473,8 @@ details.extra > summary { font-style: italic; font-weight: 600; font-size: 19px;
 </main>
 
 <script>
-const WORK = 480, MIN_LUNCH = 30, SW_MAX = 10;
-const KEY = "orario-uscita", KEY_DAYS = "orario-giorni", KEY_USES = "orario-zainetto-usi", KEY_SW = "orario-smart";
+const WORK = 480, MIN_LUNCH = 30, SW_MAX = 10, SHORT_DAY = 360;
+const KEY = "orario-uscita", KEY_DAYS = "orario-giorni", KEY_USES = "orario-zainetto-usi", KEY_SW = "orario-smart", KEY_FE = "orario-ferie", KEY_SALDI = "orario-saldi";
 const $ = id => document.getElementById(id);
 const ids = ["in", "ls", "le", "out"];
 const toMin = v => { if (!v) return null; const [h, m] = v.split(":").map(Number); return h * 60 + m; };
@@ -425,6 +490,14 @@ const write = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } ca
 let days = read(KEY_DAYS, {});     // giornate in sede: { "2026-11-12": {in, ls, le, out, extra} }
 let uses = read(KEY_USES, []);     // minuti usati dallo zainetto: [{ date, min }]
 let swDays = read(KEY_SW, {});     // giorni di smart working: { "2026-11-14": true }
+let ferie = read(KEY_FE, {});      // ferie e permessi in minuti: { "2026-11-20": { ferie: 480, zaino: 0, par: 0, giust: 0 } }
+let saldi = read(KEY_SALDI, []);   // saldi Ferie e PAR impostati a mano: [{ date, kind: "ferie" | "par", min, set }]
+const FE_KINDS = ["ferie", "zaino", "par", "giust"];
+const FE_NAMES = { ferie: "Ferie", zaino: "Zainetto", par: "PAR", giust: "Giustificativo" };
+const feMin = (d, set = ferie) => set[d] ? FE_KINDS.reduce((s, k) => s + (set[d][k] || 0), 0) : 0;
+const workFor = d => Math.max(0, WORK - feMin(d)); // ore di lavoro del giorno, tolte ferie e permessi
+const sdur = m => (m < 0 ? "−" : "") + dur(Math.abs(m));
+const feBreak = r => FE_KINDS.filter(k => r && r[k]).map(k => k === "giust" ? `${dur(r[k])} con giustificativo` : `${dur(r[k])} da ${FE_NAMES[k]}`).join(", ");
 // Conversione dai dati della versione precedente (smart working salvato dentro la giornata)
 Object.keys(days).forEach(d => { if (days[d].sw) { swDays[d] = true; if (!days[d].in) delete days[d]; else delete days[d].sw; } });
 write(KEY_DAYS, days); write(KEY_SW, swDays);
@@ -441,10 +514,11 @@ function load() {
 }
 function save() { const s = { day: today(), mode }; ids.forEach(k => s[k] = $(k).value); write(KEY, s); }
 
-// Ora di uscita prevista: ingresso + 8 h + pranzo (almeno 30 min)
-function expectedExit(inn, ls, le) {
-  const lunch = ls != null && le != null ? Math.max(MIN_LUNCH, le - ls) : MIN_LUNCH;
-  return { exit: inn + WORK + lunch, lunch };
+// Ora di uscita prevista: ingresso + ore di lavoro (8 h meno ferie/permessi) + pranzo (almeno 30 min).
+// Con 6 h di lavoro o meno il pranzo conta solo se lo inserisci.
+function expectedExit(inn, ls, le, work = WORK) {
+  const lunch = ls != null && le != null ? Math.max(MIN_LUNCH, le - ls) : ls != null || work > SHORT_DAY ? MIN_LUNCH : 0;
+  return { exit: inn + work + lunch, lunch };
 }
 
 // Mostra la vista "in sede" (orari) o "smart working" (niente orari) in base al calendario di oggi
@@ -453,19 +527,22 @@ let mode = "sede";
 function renderMode() {
   const sw = mode === "sw";
   $("sw").checked = sw; $("sede").checked = !sw;
-  $("office").hidden = sw; $("resultCard").hidden = sw; $("foot").hidden = sw;
+  const feT = feMin(today()), feFull = feT >= WORK; // giornata intera di ferie: niente orari
+  $("office").hidden = sw || feFull; $("resultCard").hidden = sw || feFull; $("foot").hidden = sw || feFull;
+  $("feCard").hidden = sw || !feFull;
+  $("feCardTxt").textContent = feFull ? `${feBreak(ferie[today()])}. Oggi non serve inserire orari.` : "";
   $("swCard").hidden = !sw;
   $("calSlotMain").hidden = !sw; $("extra").hidden = sw;
   const used = swInMonth(today().slice(0, 7));
   const inCal = !!swDays[today()];
-  $("swCardTxt").textContent = inCal
-    ? `Oggi è segnato come smart working ✓ Non serve inserire orari. Questo mese: ${used} di ${SW_MAX}.`
+  $("swCardTxt").textContent = feFull ? "Oggi sei in ferie: non serve segnare lo smart working."
+    : inCal ? `Oggi è segnato come smart working ✓ Non serve inserire orari. Questo mese: ${used} di ${SW_MAX}.`
     : used >= SW_MAX
       ? `Oggi non è tra i giorni di smart working: hai già ${SW_MAX} giorni nel mese. Togline uno dal calendario per includere oggi.`
       : `Oggi non era programmato come smart working.`;
-  $("swCard").classList.toggle("warn", !inCal);
-  $("markToday").hidden = inCal || used >= SW_MAX;
-  $("planNote").hidden = sw || !inCal;
+  $("swCard").classList.toggle("warn", !inCal && !feFull);
+  $("markToday").hidden = inCal || feFull || used >= SW_MAX;
+  $("planNote").hidden = sw || !inCal || feFull;
 }
 
 function render() {
@@ -479,14 +556,16 @@ function render() {
     $("bar").hidden = true; $("detail").textContent = "";
     return;
   }
-  const { exit, lunch } = expectedExit(inn, ls, le);
+  const work = workFor(today()), feT = feMin(today());
+  const { exit, lunch } = expectedExit(inn, ls, le, work);
   let lunchTxt;
   if (ls != null && le != null) lunchTxt = `Pranzo: <b>${dur(lunch)}</b>`;
   else if (ls != null) lunchTxt = `Pranzo in corso: puoi rientrare dalle <b>${fmt(ls + MIN_LUNCH)}</b>`;
-  else lunchTxt = `Pranzo non ancora inserito, conteggiati <b>${MIN_LUNCH} min</b>`;
+  else if (lunch) lunchTxt = `Pranzo non ancora inserito, conteggiati <b>${MIN_LUNCH} min</b>`;
+  else lunchTxt = `Pranzo non inserito: con ${dur(work)} di lavoro non viene conteggiato`;
   exitEl.textContent = fmt(exit); exitEl.classList.remove("empty");
 
-  const st = $("status"), total = WORK + lunch;
+  const st = $("status"), total = work + lunch || 1;
   if (out != null) {
     const diff = out - exit;
     st.className = diff < 0 ? "status" : "status done";
@@ -501,7 +580,8 @@ function render() {
     $("fill").style.width = Math.min(100, Math.max(0, (now - inn) / total * 100)) + "%";
   }
   $("bar").hidden = false;
-  $("detail").innerHTML = `Ingresso <b>${fmt(inn)}</b> + 8 h lavoro + pranzo<br>${lunchTxt}`;
+  $("detail").innerHTML = `Ingresso <b>${fmt(inn)}</b> + ${work === WORK ? "8 h" : dur(work)} lavoro + pranzo`
+    + (feT ? `<br>Oggi <b>${dur(feT)}</b> di ferie o permesso` : "") + `<br>${lunchTxt}`;
 }
 
 // Pausa pranzo minima obbligatoria: non si può chiudere il pranzo prima di 30 minuti
@@ -528,7 +608,7 @@ function registerDay() {
   const inn = toMin($("in").value), ls = toMin($("ls").value), le = toMin($("le").value), out = toMin($("out").value);
   if (inn == null) { $("saveMsg").textContent = "Inserisci l'orario di ingresso."; return; }
   if (out == null) { $("saveMsg").textContent = "Inserisci l'uscita effettiva per calcolare lo zainetto."; return; }
-  const extra = Math.max(0, out - expectedExit(inn, ls, le).exit);
+  const extra = Math.max(0, out - expectedExit(inn, ls, le, workFor(today())).exit);
   const rec = { extra }; ids.forEach(k => rec[k] = $(k).value);
   days[today()] = rec; write(KEY_DAYS, days);
   viewMonth = today().slice(0, 7);
@@ -537,18 +617,26 @@ function registerDay() {
 }
 
 // Saldo dello zainetto: tutti i minuti accumulati meno quelli usati (l'azzeramento di fine anno si fa a mano con "Modifica saldo")
-function zTotal() {
-  return Object.values(days).reduce((s, r) => s + (r.extra || 0), 0) - uses.reduce((s, u) => s + u.min, 0);
+function zTotal(fset = ferie) {
+  return Object.values(days).reduce((s, r) => s + (r.extra || 0), 0) - uses.reduce((s, u) => s + u.min, 0)
+    - Object.values(fset).reduce((s, r) => s + (r.zaino || 0), 0);
+}
+// Saldo di Zainetto, Ferie o PAR: saldi impostati a mano meno le ore prese nei giorni di ferie (anche quelli programmati)
+function balance(kind, fset = ferie) {
+  if (kind === "zaino") return zTotal(fset);
+  return -saldi.filter(x => x.kind === kind).reduce((s, x) => s + x.min, 0) - Object.values(fset).reduce((s, r) => s + (r[kind] || 0), 0);
 }
 
-let draft = null; // giorni in modifica (null = non in modifica)
+let draft = null, draftFe = null; // smart working e ferie in modifica (null = non in modifica)
+let pick = "sw", feSel = null;     // cosa si segna toccando i giorni; giorno aperto nel pannello ferie
 function renderCalendar() {
-  const set = draft || swDays, editing = !!draft;
+  const set = draft || swDays, fset = draftFe || ferie, editing = !!draft;
   $("cal").classList.toggle("editing", editing);
+  $("calPick").hidden = !editing;
   $("editSw").hidden = editing; $("saveSw").hidden = !editing; $("cancelSw").hidden = !editing;
-  $("calHint").textContent = editing
-    ? `Tocca i giorni per selezionarli o toglierli, poi premi Salva. Selezionati nel mese: ${Object.keys(set).filter(d => d.startsWith(viewMonth)).length} di ${SW_MAX}.`
-    : "Premi il pulsante per scegliere i giorni di smart working.";
+  $("calHint").textContent = !editing ? "Premi il pulsante per segnare smart working o ferie."
+    : pick === "fe" ? "Tocca un giorno per segnare ferie o permessi e scegliere da dove prendere le ore, poi premi Salva."
+    : `Tocca i giorni per selezionarli o toglierli, poi premi Salva. Selezionati nel mese: ${Object.keys(set).filter(d => d.startsWith(viewMonth)).length} di ${SW_MAX}.`;
   const [y, m] = viewMonth.split("-").map(Number);
   const first = new Date(y, m - 1, 1), nDays = new Date(y, m, 0).getDate();
   const offset = (first.getDay() + 6) % 7; // settimana da lunedì
@@ -557,9 +645,11 @@ function renderCalendar() {
   html += "<span></span>".repeat(offset);
   for (let d = 1; d <= nDays; d++) {
     const key = `${viewMonth}-${pad(d)}`, wd = (offset + d - 1) % 7;
-    const cls = [wd >= 5 ? "we" : "", key === t ? "today" : "", set[key] ? "sw" : "", set[key] && key > t ? "plan" : ""].filter(Boolean).join(" ");
-    const lbl = `${d}${set[key] ? (key > t ? ", smart working programmato" : ", smart working") : ""}`;
-    html += `<button type="button" class="${cls}" data-day="${key}" aria-label="${lbl}" aria-pressed="${!!set[key]}"${editing ? "" : " disabled"}>${d}</button>`;
+    const f = feMin(key, fset);
+    const cls = [wd >= 5 ? "we" : "", key === t ? "today" : "", set[key] ? "sw" : "", f ? (f >= WORK ? "fe" : "fe part") : "",
+      (set[key] || f) && key > t ? "plan" : "", key === feSel ? "sel" : ""].filter(Boolean).join(" ");
+    const lbl = `${d}${set[key] ? (key > t ? ", smart working programmato" : ", smart working") : ""}${f ? (f >= WORK ? ", ferie" : `, ferie ${dur(f)}`) : ""}`;
+    html += `<button type="button" class="${cls}" data-day="${key}" aria-label="${lbl}" aria-pressed="${!!(set[key] || f)}"${editing ? "" : " disabled"}>${d}</button>`;
   }
   $("calGrid").innerHTML = html;
 }
@@ -573,26 +663,43 @@ function renderMonth() {
   $("swCount").innerHTML = `${swUsed}<small> / ${SW_MAX}</small>`;
   $("swDots").innerHTML = Array.from({ length: SW_MAX }, (_, i) => `<i class="${i < swUsed ? "on" : ""}"></i>`).join("");
   $("swLeft").textContent = (swUsed >= SW_MAX ? "Esauriti per questo mese" : `Ne restano ${SW_MAX - swUsed}`) + (swUsed > swDone ? ` · ${swUsed - swDone} programmati` : "");
+  const dlabel = (d, opt) => { const [yy, mm, dd] = d.split("-").map(Number); return new Date(yy, mm - 1, dd).toLocaleDateString("it-IT", opt); };
+  const feDays = Object.keys(ferie).filter(d => d.startsWith(viewMonth)).sort();
+  $("feList").innerHTML = feDays.length
+    ? feDays.map(d => `<li><span class="d">${dlabel(d, { weekday: "short", day: "numeric" })}</span><span class="t">${feBreak(ferie[d])}</span></li>`).join("")
+    : `<li class="sub">Nessuna ferie in questo mese.</li>`;
+  $("feBal").textContent = `Saldi: Ferie ${sdur(balance("ferie"))} · PAR ${sdur(balance("par"))} · Zainetto ${sdur(zTotal())}`;
+  const feB = balance("ferie"), parB = balance("par");
+  const usedIn = k => feDays.reduce((s, d) => s + (ferie[d][k] || 0), 0);
+  $("feTotal").textContent = sdur(feB); $("parTotal").textContent = sdur(parB);
+  $("feSub").textContent = `≈ ${(feB / WORK).toLocaleString("it-IT", { maximumFractionDigits: 1 })} giorni` + (usedIn("ferie") ? ` · questo mese −${dur(usedIn("ferie"))}` : "");
+  $("parSub").textContent = usedIn("par") ? `Questo mese −${dur(usedIn("par"))}` : "Nessuna ora usata questo mese";
 
   const tot = zTotal();
   $("zTotal").textContent = (tot < 0 ? "−" : "") + dur(Math.abs(tot));
-  $("sumLine").textContent = `Saldo ${(tot < 0 ? "−" : "") + dur(Math.abs(tot))}`;
+  $("sumLine").textContent = `Zainetto ${sdur(tot)} · Ferie ${sdur(feB)} · PAR ${sdur(parB)}`;
   const monthDays = Object.keys(days).filter(d => d.startsWith(viewMonth)).sort();
   const earned = monthDays.reduce((s, d) => s + (days[d].extra || 0), 0);
-  const spent = uses.filter(u => u.set == null && u.date.startsWith(viewMonth)).reduce((s, u) => s + u.min, 0);
+  const spent = uses.filter(u => u.set == null && u.date.startsWith(viewMonth)).reduce((s, u) => s + u.min, 0) + usedIn("zaino");
   $("zMonth").textContent = `Questo mese: +${dur(earned)}` + (spent ? `, usati ${dur(spent)}` : "");
 
   const items = [
     ...monthDays.map(d => ({ d, kind: "day", r: days[d] })),
-    ...uses.map((u, i) => ({ d: u.date, kind: "use", u, i })).filter(x => x.d.startsWith(viewMonth))
+    ...uses.map((u, i) => ({ d: u.date, kind: "use", u, i })).filter(x => x.d.startsWith(viewMonth)),
+    ...feDays.map(d => ({ d, kind: "fe", r: ferie[d] })),
+    ...saldi.map((x, i) => ({ d: x.date, kind: "sal", x, i })).filter(x => x.d.startsWith(viewMonth))
   ].sort((a, b) => b.d.localeCompare(a.d));
   const log = $("log");
-  if (!items.length) { log.innerHTML = `<li class="empty-log">Nessuna giornata in sede registrata in questo mese. Compila gli orari e premi "Registra giornata".</li>`; return; }
+  if (!items.length) { log.innerHTML = `<li class="empty-log">Nessun movimento in questo mese. A fine giornata compila gli orari e premi "Registra giornata".</li>`; return; }
   log.innerHTML = items.map(x => {
     const [yy, mm, dd] = x.d.split("-").map(Number);
     const label = new Date(yy, mm - 1, dd).toLocaleDateString("it-IT", { weekday: "short", day: "numeric" });
-    if (x.kind === "use" && x.u.set != null) return `<li><span><span class="d">${label}</span><br><span class="t">Saldo impostato a mano</span></span>
+    if (x.kind === "use" && x.u.set != null) return `<li><span><span class="d">${label}</span><br><span class="t">Saldo zainetto impostato a mano</span></span>
       <span class="plus">= ${dur(x.u.set)}</span><button type="button" data-del="use:${x.i}">Elimina</button></li>`;
+    if (x.kind === "fe") return `<li><span><span class="d">${label}</span><br><span class="t">Ferie: ${feBreak(x.r)}</span></span>
+      <span class="fe-t">${feMin(x.d) >= WORK ? "giornata" : dur(feMin(x.d))}</span><button type="button" data-del="fe:${x.d}">Elimina</button></li>`;
+    if (x.kind === "sal") return `<li><span><span class="d">${label}</span><br><span class="t">Saldo ${x.x.kind === "par" ? "PAR" : "ferie"} impostato a mano</span></span>
+      <span class="plus">= ${dur(x.x.set)}</span><button type="button" data-del="sal:${x.i}">Elimina</button></li>`;
     if (x.kind === "use") return `<li><span><span class="d">${label}</span><br><span class="t">Usati dallo zainetto</span></span>
       <span class="minus">−${dur(x.u.min)}</span><button type="button" data-del="use:${x.i}">Elimina</button></li>`;
     const r = x.r;
@@ -606,17 +713,68 @@ $("calGrid").addEventListener("click", e => {
   const b = e.target.closest("[data-day]"); if (!b || !draft) return;
   const d = b.dataset.day;
   $("calMsg").textContent = "";
+  if (pick === "fe") { openFe(d); return; }
   if (draft[d]) delete draft[d];
+  else if (feMin(d, draftFe) >= WORK) $("calMsg").textContent = "In questo giorno sei in ferie: togli prima le ferie per segnarlo come smart working.";
   else if (Object.keys(draft).filter(k => k.startsWith(d.slice(0, 7))).length >= SW_MAX) $("calMsg").textContent = `Puoi selezionare al massimo ${SW_MAX} giorni di smart working al mese.`;
   else draft[d] = true;
   renderCalendar();
 });
-$("editSw").addEventListener("click", () => { draft = { ...swDays }; $("calMsg").textContent = ""; renderCalendar(); });
-$("cancelSw").addEventListener("click", () => { draft = null; $("calMsg").textContent = ""; renderCalendar(); });
-$("saveSw").addEventListener("click", () => {
-  swDays = draft; draft = null; write(KEY_SW, swDays);
-  $("calMsg").textContent = ""; renderMode(); renderMonth();
+function closeFe() { feSel = null; $("fePanel").hidden = true; }
+function closeEdit() { draft = draftFe = null; closeFe(); $("calMsg").textContent = ""; }
+$("editSw").addEventListener("click", () => {
+  draft = { ...swDays }; draftFe = JSON.parse(JSON.stringify(ferie)); closeFe();
+  $("pickSw").checked = pick === "sw"; $("pickFe").checked = pick === "fe";
+  $("calMsg").textContent = ""; renderCalendar();
 });
+$("cancelSw").addEventListener("click", () => { closeEdit(); renderCalendar(); });
+$("saveSw").addEventListener("click", () => {
+  swDays = draft; ferie = draftFe; write(KEY_SW, swDays); write(KEY_FE, ferie);
+  closeEdit(); renderMode(); renderMonth(); render();
+});
+$("pickSw").addEventListener("change", () => { pick = "sw"; closeFe(); $("calMsg").textContent = ""; renderCalendar(); });
+$("pickFe").addEventListener("change", () => { pick = "fe"; closeFe(); $("calMsg").textContent = ""; renderCalendar(); });
+
+// Pannello del giorno di ferie: quante ore prendere da Ferie, Zainetto, PAR o con giustificativo
+const hmLbl = m => !m ? "0" : m < 60 ? `${m} min` : `${Math.floor(m / 60)} h${m % 60 ? ` ${m % 60} min` : ""}`;
+FE_KINDS.forEach(k => {
+  $("fe_" + k).innerHTML = Array.from({ length: WORK / 15 + 1 }, (_, i) => `<option value="${i * 15}">${hmLbl(i * 15)}</option>`).join("");
+  $("fe_" + k).addEventListener("change", () => { $("feMsg").textContent = ""; updFe(); });
+});
+const feAvail = k => balance(k, draftFe) + ((draftFe[feSel] || {})[k] || 0); // disponibili per il giorno aperto
+const feForm = () => { const r = {}; FE_KINDS.forEach(k => { const v = Number($("fe_" + k).value); if (v) r[k] = v; }); return r; };
+function updFe() {
+  FE_KINDS.forEach(k => $("feav_" + k).textContent = k === "giust" ? "nessun limite" : `disponibili ${sdur(feAvail(k))}`);
+  const tot = feMin("x", { x: feForm() });
+  $("feTot").textContent = `Totale: ${tot ? dur(tot) : "0"} su 8 h` + (tot === WORK ? " · giornata intera" : tot > WORK ? " · troppe ore" : "");
+}
+function openFe(d) {
+  feSel = d;
+  const r = draftFe[d] || { ferie: WORK };
+  FE_KINDS.forEach(k => $("fe_" + k).value = String(r[k] || 0));
+  const [y, m, dd] = d.split("-").map(Number);
+  $("feDay").textContent = new Date(y, m - 1, dd).toLocaleDateString("it-IT", { weekday: "long", day: "numeric", month: "long" });
+  $("feDel").hidden = !draftFe[d]; $("feMsg").textContent = "";
+  $("fePanel").hidden = false; updFe(); renderCalendar();
+  try { $("fePanel").scrollIntoView({ block: "nearest", behavior: "smooth" }); } catch (e) {}
+}
+$("feOk").addEventListener("click", () => {
+  const r = feForm(), tot = feMin("x", { x: r });
+  if (!tot) { $("feMsg").textContent = "Scegli quante ore prendere."; return; }
+  if (tot > WORK) { $("feMsg").textContent = `In un giorno puoi prendere al massimo 8 h (ora sono ${dur(tot)}).`; return; }
+  for (const k of ["ferie", "zaino", "par"]) {
+    const av = feAvail(k);
+    if ((r[k] || 0) > av) {
+      $("feMsg").textContent = `${FE_NAMES[k]}: hai solo ${sdur(Math.max(0, av))} disponibili.` + (k === "zaino" ? "" : ` Puoi impostare il saldo da In sede › Zainetto, ferie e PAR.`);
+      return;
+    }
+  }
+  draftFe[feSel] = r;
+  if (tot >= WORK) delete draft[feSel]; // giornata intera di ferie: niente smart working
+  closeFe(); renderCalendar();
+});
+$("feDel").addEventListener("click", () => { delete draftFe[feSel]; closeFe(); renderCalendar(); });
+$("feClose").addEventListener("click", () => { closeFe(); renderCalendar(); });
 
 // Eliminazione con conferma: primo tocco chiede conferma, secondo elimina
 $("log").addEventListener("click", e => {
@@ -624,6 +782,8 @@ $("log").addEventListener("click", e => {
   if (!b.classList.contains("confirm")) { b.classList.add("confirm"); b.textContent = "Conferma"; return; }
   const [kind, id] = b.dataset.del.split(/:(.+)/);
   if (kind === "day") { delete days[id]; write(KEY_DAYS, days); }
+  else if (kind === "fe") { delete ferie[id]; write(KEY_FE, ferie); renderMode(); render(); }
+  else if (kind === "sal") { saldi.splice(Number(id), 1); write(KEY_SALDI, saldi); }
   else { uses.splice(Number(id), 1); write(KEY_USES, uses); }
   renderMonth();
 });
@@ -648,12 +808,12 @@ ids.forEach(k => {
 });
 // Cambiando vista si chiude un'eventuale modifica del calendario non salvata
 $("sw").addEventListener("change", () => {
-  draft = null; $("calMsg").textContent = "";
+  closeEdit();
   mode = "sw"; // oggi si segna solo se era programmato, altrimenti c'è il pulsante rapido
   save(); renderMode(); renderMonth();
 });
 $("sede").addEventListener("change", () => {
-  draft = null; $("calMsg").textContent = "";
+  closeEdit();
   mode = "sede"; officeUsed();
   save(); renderMode(); renderMonth(); render();
 });
@@ -662,7 +822,7 @@ document.querySelectorAll("[data-now]").forEach(b => b.addEventListener("click",
 }));
 $("reset").addEventListener("click", () => { ids.forEach(k => $(k).value = ""); lunchError = ""; save(); render(); });
 $("save").addEventListener("click", registerDay);
-const shift = n => { const [y, m] = viewMonth.split("-").map(Number); const d = new Date(y, m - 1 + n, 1); viewMonth = `${d.getFullYear()}-${pad(d.getMonth() + 1)}`; $("calMsg").textContent = ""; renderMonth(); };
+const shift = n => { const [y, m] = viewMonth.split("-").map(Number); const d = new Date(y, m - 1 + n, 1); viewMonth = `${d.getFullYear()}-${pad(d.getMonth() + 1)}`; closeFe(); $("calMsg").textContent = ""; renderMonth(); };
 $("prev").addEventListener("click", () => shift(-1));
 $("next").addEventListener("click", () => shift(1));
 $("markToday").addEventListener("click", () => { setSw(today(), true); renderMode(); renderMonth(); });
@@ -672,9 +832,10 @@ $("setBtn").addEventListener("click", () => {
   if (!Number.isInteger(h) || !Number.isInteger(m) || h < 0 || m < 0 || m > 59 || ($("setH").value === "" && $("setM").value === "")) {
     $("setMsg").textContent = "Scrivi ore e minuti (minuti da 0 a 59)."; return;
   }
-  const target = h * 60 + m;
-  uses.push({ date: today(), min: zTotal() - target, set: target }); write(KEY_USES, uses);
-  $("setH").value = ""; $("setM").value = ""; $("setMsg").textContent = `Saldo impostato a ${dur(target)}.`;
+  const target = h * 60 + m, which = $("setWhich").value;
+  if (which === "ferie" || which === "par") { saldi.push({ date: today(), kind: which, min: balance(which) - target, set: target }); write(KEY_SALDI, saldi); }
+  else uses.push({ date: today(), min: zTotal() - target, set: target }), write(KEY_USES, uses);
+  $("setH").value = ""; $("setM").value = ""; $("setMsg").textContent = `Saldo ${FE_NAMES[which === "ferie" || which === "par" ? which : "zaino"]} impostato a ${dur(target)}.`;
   viewMonth = today().slice(0, 7); renderMonth();
 });
 $("zPrev").addEventListener("click", () => shift(-1));
@@ -726,8 +887,8 @@ $("importLbl").addEventListener("keydown", e => { if (e.key === "Enter" || e.key
 function showBk(msg) { $("bkPanel").hidden = false; $("bkMsg").textContent = msg; }
 $("bkClose").addEventListener("click", () => { $("bkPanel").hidden = true; $("exportText").hidden = true; $("importOk").hidden = true; $("importNo").hidden = true; pendingImport = null; });
 // ===== Backup: esporta e reimporta i dati come file CSV (si apre anche con Excel o Numbers) =====
-const BK_KEYS = [KEY, KEY_DAYS, KEY_USES, KEY_SW, "orario-extra-open", "orario-tema"];
-const CSV_HEAD = ["tipo", "data", "ingresso", "inizio_pranzo", "fine_pranzo", "uscita", "minuti", "variazione_zainetto"];
+const BK_KEYS = [KEY, KEY_DAYS, KEY_USES, KEY_SW, KEY_FE, KEY_SALDI, "orario-extra-open", "orario-tema"];
+const CSV_HEAD = ["tipo", "data", "ingresso", "inizio_pranzo", "fine_pranzo", "uscita", "minuti", "variazione_saldo", "minuti_ferie", "minuti_zainetto", "minuti_par", "minuti_giustificativo"];
 // Una riga per ogni giornata in sede, giorno di smart working, uso dello zainetto o saldo impostato a mano
 function backupCsv() {
   const rows = [];
@@ -736,6 +897,9 @@ function backupCsv() {
   uses.forEach(u => rows.push(u.set != null
     ? ["saldo impostato", u.date, "", "", "", "", u.set, -u.min]
     : ["uso zainetto", u.date, "", "", "", "", u.min, -u.min]));
+  Object.keys(ferie).sort().forEach(d => { const r = ferie[d]; rows.push(["ferie", d, "", "", "", "", feMin(d), "", r.ferie || 0, r.zaino || 0, r.par || 0, r.giust || 0]); });
+  saldi.forEach(x => rows.push([x.kind === "par" ? "saldo par impostato" : "saldo ferie impostato", x.date, "", "", "", "", x.set, -x.min]));
+  rows.forEach(r => { while (r.length < CSV_HEAD.length) r.push(""); });
   rows.sort((a, b) => a[1].localeCompare(b[1]));
   return "﻿" + [CSV_HEAD, ...rows].map(r => r.join(";")).join("\r\n") + "\r\n";
 }
@@ -744,7 +908,7 @@ function parseCsv(text) {
   const sep = lines[0] && lines[0].includes(";") ? ";" : ",";
   const head = (lines.shift() || "").split(sep).map(h => h.trim().toLowerCase());
   if (head[0] !== "tipo" || head[1] !== "data") throw new Error();
-  const nd = {}, ns = {}, nu = [];
+  const nd = {}, ns = {}, nu = [], nf = {}, nsal = [];
   const time = v => /^\d{1,2}:\d{2}$/.test(v) ? v.padStart(5, "0") : "";
   const num = v => { const n = Number(String(v).replace(",", ".")); return Number.isFinite(n) ? Math.round(n) : 0; };
   lines.forEach(l => {
@@ -754,9 +918,11 @@ function parseCsv(text) {
     if (tipo.startsWith("giornata")) nd[d] = { in: time(c[2]), ls: time(c[3]), le: time(c[4]), out: time(c[5]), extra: Math.max(0, num(c[6])) };
     else if (tipo.startsWith("smart")) ns[d] = true;
     else if (tipo.startsWith("uso")) nu.push({ date: d, min: Math.abs(num(c[6])) });
+    else if (tipo.startsWith("ferie")) { const r = {}; FE_KINDS.forEach((k, i) => { const v = Math.max(0, num(c[8 + i])); if (v) r[k] = v; }); if (Object.keys(r).length) nf[d] = r; }
+    else if (tipo.startsWith("saldo ferie") || tipo.startsWith("saldo par")) nsal.push({ date: d, kind: tipo.startsWith("saldo par") ? "par" : "ferie", min: -num(c[7]), set: Math.max(0, num(c[6])) });
     else if (tipo.startsWith("saldo")) nu.push({ date: d, min: -num(c[7]), set: Math.max(0, num(c[6])) });
   });
-  return { [KEY_DAYS]: JSON.stringify(nd), [KEY_SW]: JSON.stringify(ns), [KEY_USES]: JSON.stringify(nu), _info: [Object.keys(nd).length, Object.keys(ns).length] };
+  return { [KEY_DAYS]: JSON.stringify(nd), [KEY_SW]: JSON.stringify(ns), [KEY_USES]: JSON.stringify(nu), [KEY_FE]: JSON.stringify(nf), [KEY_SALDI]: JSON.stringify(nsal), _info: [Object.keys(nd).length, Object.keys(ns).length, Object.keys(nf).length] };
 }
 $("exportBtn").addEventListener("click", async () => {
   closeMenu();
@@ -798,7 +964,7 @@ $("importFile").addEventListener("change", e => {
       } else {
         pendingImport = parseCsv(text); info = pendingImport._info; delete pendingImport._info;
       }
-      showBk(`Nel file ci sono ${info[0]} giornate in sede e ${info[1]} giorni di smart working. Sostituire i dati attuali?`);
+      showBk(`Nel file ci sono ${info[0]} giornate in sede, ${info[1]} giorni di smart working e ${info[2] || 0} giorni di ferie. Sostituire i dati attuali?`);
       $("importOk").hidden = false; $("importNo").hidden = false; $("exportText").hidden = true;
     } catch (err) { pendingImport = null; showBk("Questo file non è un backup di Quando stacco."); }
     $("importFile").value = "";
@@ -809,7 +975,7 @@ $("importNo").addEventListener("click", () => { pendingImport = null; $("importO
 $("importOk").addEventListener("click", () => {
   if (!pendingImport) return;
   try {
-    [KEY_DAYS, KEY_USES, KEY_SW].forEach(k => localStorage.removeItem(k));
+    [KEY_DAYS, KEY_USES, KEY_SW, KEY_FE, KEY_SALDI].forEach(k => localStorage.removeItem(k));
     Object.entries(pendingImport).forEach(([k, v]) => { if (BK_KEYS.includes(k)) localStorage.setItem(k, v); });
   } catch (e) { showBk("Non riesco a salvare i dati su questo dispositivo."); return; }
   location.reload();
@@ -819,7 +985,7 @@ load(); checkLunch(); save(); renderMode(); render(); renderMonth();
 // A mezzanotte (app lasciata aperta) si riparte con una giornata nuova
 let curDay = today();
 setInterval(() => {
-  if (today() !== curDay) { curDay = today(); ids.forEach(k => $(k).value = ""); lunchError = ""; draft = null; viewMonth = curDay.slice(0, 7); load(); save(); renderMonth(); }
+  if (today() !== curDay) { curDay = today(); ids.forEach(k => $(k).value = ""); lunchError = ""; closeEdit(); viewMonth = curDay.slice(0, 7); load(); save(); renderMonth(); }
   renderMode(); render();
 }, 30000);
 </script>
