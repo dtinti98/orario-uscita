@@ -277,6 +277,8 @@ select:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 .fecard .big2 { color: var(--fe); }
 .stat.fe .big { color: var(--fe); } .stat.par .big { color: var(--par); }
 .stats .big { font-size: 24px; line-height: 1.1; }
+.big small { white-space: nowrap; }
+@media (max-width: 360px) { .stats .big { font-size: 21px; } }
 .felist { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 4px; font-size: 14px; }
 .felist .d { font-weight: 600; margin-right: 6px; }
 .log .fe-t { font-weight: 600; color: var(--fe); }
@@ -479,7 +481,7 @@ const $ = id => document.getElementById(id);
 const ids = ["in", "ls", "le", "out"];
 const toMin = v => { if (!v) return null; const [h, m] = v.split(":").map(Number); return h * 60 + m; };
 const fmt = m => { m = ((Math.round(m) % 1440) + 1440) % 1440; return String(Math.floor(m / 60)).padStart(2, "0") + ":" + String(m % 60).padStart(2, "0"); };
-const dur = m => { m = Math.max(0, Math.round(m)); const h = Math.floor(m / 60), r = m % 60; return h ? `${h} h ${String(r).padStart(2, "0")} min` : `${r} min`; };
+const dur = m => { m = Math.max(0, Math.round(m)); const h = Math.floor(m / 60), r = m % 60; return h ? `${h} h` + (r ? ` ${String(r).padStart(2, "0")} min` : "") : `${r} min`; };
 const pad = n => String(n).padStart(2, "0");
 const dayKey = d => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
 const today = () => dayKey(new Date());
@@ -497,6 +499,7 @@ const FE_NAMES = { ferie: "Ferie", zaino: "Zainetto", par: "PAR", giust: "Giusti
 const feMin = (d, set = ferie) => set[d] ? FE_KINDS.reduce((s, k) => s + (set[d][k] || 0), 0) : 0;
 const workFor = d => Math.max(0, WORK - feMin(d)); // ore di lavoro del giorno, tolte ferie e permessi
 const sdur = m => (m < 0 ? "−" : "") + dur(Math.abs(m));
+const bigDur = m => sdur(m).replace(/ (\d+ min)$/, " <small>$1</small>"); // saldi grandi: minuti più piccoli
 const feBreak = r => FE_KINDS.filter(k => r && r[k]).map(k => k === "giust" ? `${dur(r[k])} con giustificativo` : `${dur(r[k])} da ${FE_NAMES[k]}`).join(", ");
 // Conversione dai dati della versione precedente (smart working salvato dentro la giornata)
 Object.keys(days).forEach(d => { if (days[d].sw) { swDays[d] = true; if (!days[d].in) delete days[d]; else delete days[d].sw; } });
@@ -671,12 +674,12 @@ function renderMonth() {
   $("feBal").textContent = `Saldi: Ferie ${sdur(balance("ferie"))} · PAR ${sdur(balance("par"))} · Zainetto ${sdur(zTotal())}`;
   const feB = balance("ferie"), parB = balance("par");
   const usedIn = k => feDays.reduce((s, d) => s + (ferie[d][k] || 0), 0);
-  $("feTotal").textContent = sdur(feB); $("parTotal").textContent = sdur(parB);
-  $("feSub").textContent = `≈ ${(feB / WORK).toLocaleString("it-IT", { maximumFractionDigits: 1 })} giorni` + (usedIn("ferie") ? ` · questo mese −${dur(usedIn("ferie"))}` : "");
+  $("feTotal").innerHTML = bigDur(feB); $("parTotal").innerHTML = bigDur(parB);
+  $("feSub").textContent = `≈ ${(feB / WORK).toLocaleString("it-IT", { maximumFractionDigits: 1 }).replace("-", "−")} giorni` + (usedIn("ferie") ? ` · questo mese −${dur(usedIn("ferie"))}` : "");
   $("parSub").textContent = usedIn("par") ? `Questo mese −${dur(usedIn("par"))}` : "Nessuna ora usata questo mese";
 
   const tot = zTotal();
-  $("zTotal").textContent = (tot < 0 ? "−" : "") + dur(Math.abs(tot));
+  $("zTotal").innerHTML = bigDur(tot);
   $("sumLine").textContent = `Zainetto ${sdur(tot)} · Ferie ${sdur(feB)} · PAR ${sdur(parB)}`;
   const monthDays = Object.keys(days).filter(d => d.startsWith(viewMonth)).sort();
   const earned = monthDays.reduce((s, d) => s + (days[d].extra || 0), 0);
@@ -729,6 +732,7 @@ $("editSw").addEventListener("click", () => {
 });
 $("cancelSw").addEventListener("click", () => { closeEdit(); renderCalendar(); });
 $("saveSw").addEventListener("click", () => {
+  if (feSel && !confirmFe()) return; // Salva con il pannello aperto: conferma prima il giorno
   swDays = draft; ferie = draftFe; write(KEY_SW, swDays); write(KEY_FE, ferie);
   closeEdit(); renderMode(); renderMonth(); render();
 });
@@ -758,21 +762,23 @@ function openFe(d) {
   $("fePanel").hidden = false; updFe(); renderCalendar();
   try { $("fePanel").scrollIntoView({ block: "nearest", behavior: "smooth" }); } catch (e) {}
 }
-$("feOk").addEventListener("click", () => {
+// Conferma il giorno aperto nel pannello; false se le ore non vanno bene
+function confirmFe() {
   const r = feForm(), tot = feMin("x", { x: r });
-  if (!tot) { $("feMsg").textContent = "Scegli quante ore prendere."; return; }
-  if (tot > WORK) { $("feMsg").textContent = `In un giorno puoi prendere al massimo 8 h (ora sono ${dur(tot)}).`; return; }
+  if (!tot) { $("feMsg").textContent = "Scegli quante ore prendere."; return false; }
+  if (tot > WORK) { $("feMsg").textContent = `In un giorno puoi prendere al massimo 8 h (ora sono ${dur(tot)}).`; return false; }
   for (const k of ["ferie", "zaino", "par"]) {
     const av = feAvail(k);
     if ((r[k] || 0) > av) {
       $("feMsg").textContent = `${FE_NAMES[k]}: hai solo ${sdur(Math.max(0, av))} disponibili.` + (k === "zaino" ? "" : ` Puoi impostare il saldo da In sede › Zainetto, ferie e PAR.`);
-      return;
+      return false;
     }
   }
   draftFe[feSel] = r;
   if (tot >= WORK) delete draft[feSel]; // giornata intera di ferie: niente smart working
-  closeFe(); renderCalendar();
-});
+  closeFe(); renderCalendar(); return true;
+}
+$("feOk").addEventListener("click", confirmFe);
 $("feDel").addEventListener("click", () => { delete draftFe[feSel]; closeFe(); renderCalendar(); });
 $("feClose").addEventListener("click", () => { closeFe(); renderCalendar(); });
 
