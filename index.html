@@ -283,7 +283,13 @@ button.editbal { align-self: flex-start; margin-top: auto; padding: 5px 12px; fo
 @media (max-width: 360px) { .stats .big { font-size: 21px; } }
 .felist { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 4px; font-size: 14px; }
 .felist .d { font-weight: 600; margin-right: 6px; }
-.feinfo { display: flex; flex-direction: column; gap: 6px; padding: 12px 14px; background: var(--fe-soft); border: 2px dashed var(--fe); border-radius: 20px 24px 18px 26px / 24px 18px 26px 20px; }
+.fedlg { width: min(340px, calc(100vw - 32px)); box-sizing: border-box; padding: 16px 18px 18px; color: var(--fg); background: var(--surface); border: 2px dashed var(--fe); border-radius: 24px 28px 22px 30px / 28px 22px 30px 24px; box-shadow: 0 14px 40px rgb(0 0 0 / .2); font-family: var(--body); }
+.fedlg[open] { display: flex; flex-direction: column; gap: 10px; }
+.fedlg::backdrop { background: rgb(30 35 30 / .4); }
+.fedlg-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.fedlg .felist { font-size: 15px; gap: 6px; }
+.fedlg .felist li { padding: 8px 12px; background: var(--fe-soft); border-radius: 12px; }
+.xbtn { width: 36px; height: 36px; padding: 0; flex: none; display: grid; place-items: center; font-size: 16px; color: var(--muted); }
 .log .fe-t { font-weight: 600; color: var(--fe); }
 </style>
 </head>
@@ -397,7 +403,6 @@ button.editbal { align-self: flex-start; margin-top: auto; padding: 5px 12px; fo
       <div class="legend"><span><i class="l1"></i>Smart working fatto</span><span><i class="l2"></i>Programmato</span><span><i class="l4"></i>Ferie</span><span><i class="l5"></i>Giornata ridotta</span></div>
       <span class="sub" id="calHint"></span>
       <span class="calmsg" id="calMsg"></span>
-      <div class="feinfo" id="feInfo" hidden aria-live="polite"><span class="fehead" id="feInfoDay"></span><ul class="felist" id="feInfoList"></ul><span class="sub" id="feInfoTot"></span></div>
       <div class="fepanel" id="fePanel" hidden>
         <span class="fehead" id="feDay"></span>
         <span class="sub">Scegli quante ore prendere e da dove.</span>
@@ -432,6 +437,13 @@ button.editbal { align-self: flex-start; margin-top: auto; padding: 5px 12px; fo
     </div>
     </div>
   </div>
+
+  <dialog class="fedlg" id="feInfo" aria-labelledby="feInfoDay">
+    <div class="fedlg-head"><span class="fehead" id="feInfoDay"></span><button type="button" class="xbtn" id="feInfoClose" aria-label="Chiudi">✕</button></div>
+    <ul class="felist" id="feInfoList"></ul>
+    <span class="sub" id="feInfoTot"></span>
+    <div class="calbtns"><button type="button" class="primary fe-btn" id="feInfoEdit">Modifica</button></div>
+  </dialog>
 
   <div class="foot" id="foot">
     <span>8 h di lavoro + pausa pranzo (minimo 30 min)</span>
@@ -636,7 +648,7 @@ function renderCalendar() {
   $("cal").classList.toggle("editing", editing);
   $("calPick").hidden = !editing;
   $("editSw").hidden = editing; $("saveSw").hidden = !editing; $("cancelSw").hidden = !editing;
-  $("calHint").textContent = !editing ? "Tocca un giorno di ferie per vedere come è impostato. Per cambiare, premi Modifica calendario."
+  $("calHint").textContent = !editing ? "Tocca un giorno di ferie per vedere come è impostato."
     : pick === "fe" ? "Tocca un giorno per segnare ferie o permessi e scegliere da dove prendere le ore, poi premi Salva."
     : `Tocca i giorni per selezionarli o toglierli, poi premi Salva. Selezionati nel mese: ${Object.keys(set).filter(d => d.startsWith(viewMonth)).length} di ${SW_MAX}.`;
   const [y, m] = viewMonth.split("-").map(Number);
@@ -713,7 +725,7 @@ function renderMonth() {
 
 $("calGrid").addEventListener("click", e => {
   const b = e.target.closest("[data-day]"); if (!b) return;
-  if (!draft) { showFeInfo(b.dataset.day === infoSel ? null : b.dataset.day); return; } // fuori modifica: dettaglio del giorno di ferie
+  if (!draft) { showFeInfo(b.dataset.day); return; } // fuori modifica: dettaglio del giorno di ferie
   const d = b.dataset.day;
   $("calMsg").textContent = "";
   if (pick === "fe") { openFe(d); return; }
@@ -723,12 +735,13 @@ $("calGrid").addEventListener("click", e => {
   else draft[d] = true;
   renderCalendar();
 });
-function closeFe() { feSel = null; $("fePanel").hidden = true; infoSel = null; $("feInfo").hidden = true; }
+function closeFe() { feSel = null; $("fePanel").hidden = true; infoSel = null; if ($("feInfo").open) $("feInfo").close(); }
 // Dettaglio di un giorno di ferie: quante ore da Ferie, Zainetto, PAR o con giustificativo
 let infoSel = null;
 function showFeInfo(d) {
   const r = d && ferie[d];
-  infoSel = r ? d : null; $("feInfo").hidden = !r;
+  infoSel = r ? d : null;
+  if (!r) { if ($("feInfo").open) $("feInfo").close(); renderCalendar(); return; }
   if (r) {
     const [y, m, dd] = d.split("-").map(Number), tot = feMin(d);
     $("feInfoDay").textContent = new Date(y, m - 1, dd).toLocaleDateString("it-IT", { weekday: "long", day: "numeric", month: "long" });
@@ -736,7 +749,16 @@ function showFeInfo(d) {
     $("feInfoTot").textContent = tot >= WORK ? "Giornata intera di ferie" : `Giornata ridotta: ${dur(tot)} di permesso, ${dur(WORK - tot)} di lavoro` + (swDays[d] ? " in smart working" : "");
   }
   renderCalendar();
+  try { $("feInfo").showModal(); } catch (e) { $("feInfo").setAttribute("open", ""); }
 }
+// Pop up del giorno: X o tocco fuori per chiudere, "Modifica" apre il calendario in modifica su quel giorno
+$("feInfoClose").addEventListener("click", () => $("feInfo").close());
+$("feInfo").addEventListener("click", e => { if (e.target === $("feInfo")) $("feInfo").close(); });
+$("feInfo").addEventListener("close", () => { infoSel = null; renderCalendar(); });
+$("feInfoEdit").addEventListener("click", () => {
+  const d = infoSel; $("feInfo").close();
+  pick = "fe"; $("editSw").click(); if (d) openFe(d);
+});
 function closeEdit() { draft = draftFe = null; closeFe(); $("calMsg").textContent = ""; }
 $("editSw").addEventListener("click", () => {
   draft = { ...swDays }; draftFe = JSON.parse(JSON.stringify(ferie)); closeFe();
