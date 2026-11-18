@@ -296,7 +296,8 @@ button.editbal { align-self: flex-start; margin-top: auto; padding: 5px 12px; fo
 .cal-grid button.swp { background: transparent; color: var(--sw); border: 2px solid var(--sw); }
 .cal-grid button.swp.plan { border-style: dashed; }
 .legend .l6 { border: 2px solid var(--sw); box-sizing: border-box; }
-.stat.swb { grid-column: 1 / -1; }
+.signbtn { width: 40px; height: 40px; padding: 0; font: 700 20px/1 var(--display); }
+.signbtn[aria-pressed="true"] { color: var(--warn); border-color: var(--warn); }
 .log .sw-t { font-weight: 600; color: var(--sw); }
 </style>
 </head>
@@ -466,6 +467,7 @@ button.editbal { align-self: flex-start; margin-top: auto; padding: 5px 12px; fo
       <span id="zMonthName"></span>
       <button type="button" id="zNext" aria-label="Mese successivo">›</button>
     </div>
+    <div class="stat sw swb"><span class="label"><svg class="ic" viewBox="0 0 28 28" aria-hidden="true" filter="url(#pencil)" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M4 13 l10 -8 l10 8" stroke="currentColor" stroke-width="1.8"/><path d="M7 11 v13 h14 v-13" stroke="currentColor" stroke-width="1.6"/><path d="M11 24 h6 l-1 -5 h-4z" fill="#f5c9cf" stroke="#c98f98" stroke-width="1.2"/><path d="M14 19 v-4" stroke="#5e8b68" stroke-width="1.4"/><path d="M14 16 c-2 0 -3 -1 -3 -3 c2 0 3 1 3 3z M14 17 c2 0 3 -1 3 -3 c-2 0 -3 1 -3 3z" fill="#cfe3c4" stroke="#5e8b68" stroke-width="1"/></svg>Smart working</span><span class="big" id="swTotal">0 min</span><span class="sub" id="swSub"></span><button type="button" class="editbal" data-kind="sw" aria-label="Modifica saldo smart working">Modifica</button></div>
     <div class="stat zaino">
       <span class="label"><svg class="ic" viewBox="0 0 28 28" aria-hidden="true" filter="url(#pencil)" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12 h13 v11 a2 2 0 0 1 -2 2 h-9 a2 2 0 0 1 -2 -2z" fill="#d9e7f0" stroke="#6f97b0" stroke-width="1.5"/><path d="M18 15 l7 -6" stroke="#6f97b0" stroke-width="1.8"/><path d="M8 12 c0 -5 7 -5 7 0" stroke="#6f97b0" stroke-width="1.5"/><path d="M26 11 v2 M24 13 v2 M26 16 v2" stroke="#8fbad3" stroke-width="1.4" stroke-dasharray="1 2"/></svg>Zainetto</span>
       <span class="big" id="zTotal">0 min</span>
@@ -473,13 +475,13 @@ button.editbal { align-self: flex-start; margin-top: auto; padding: 5px 12px; fo
       <button type="button" class="editbal" data-kind="zaino" aria-label="Modifica saldo zainetto">Modifica</button>
     </div>
     <div class="stats">
-      <div class="stat sw swb"><span class="label"><svg class="ic" viewBox="0 0 28 28" aria-hidden="true" filter="url(#pencil)" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M4 13 l10 -8 l10 8" stroke="currentColor" stroke-width="1.8"/><path d="M7 11 v13 h14 v-13" stroke="currentColor" stroke-width="1.6"/><path d="M11 24 h6 l-1 -5 h-4z" fill="#f5c9cf" stroke="#c98f98" stroke-width="1.2"/><path d="M14 19 v-4" stroke="#5e8b68" stroke-width="1.4"/><path d="M14 16 c-2 0 -3 -1 -3 -3 c2 0 3 1 3 3z M14 17 c2 0 3 -1 3 -3 c-2 0 -3 1 -3 3z" fill="#cfe3c4" stroke="#5e8b68" stroke-width="1"/></svg>Smart working</span><span class="big" id="swTotal">0 min</span><span class="sub" id="swSub"></span><button type="button" class="editbal" data-kind="sw" aria-label="Modifica saldo smart working">Modifica</button></div>
       <div class="stat fe"><span class="label"><svg class="ic" viewBox="0 0 28 28" aria-hidden="true" filter="url(#pencil)" fill="none" stroke-linecap="round" stroke-linejoin="round"><circle cx="14" cy="14" r="5.5" fill="#f6dc94" stroke="#c99a3e" stroke-width="1.6"/><path d="M14 3.5v3M14 21.5v3M3.5 14h3M21.5 14h3M6.6 6.6l2.1 2.1M19.3 19.3l2.1 2.1M6.6 21.4l2.1-2.1M19.3 8.7l2.1-2.1" stroke="#c99a3e" stroke-width="1.6"/></svg>Ferie</span><span class="big" id="feTotal">0 min</span><span class="sub" id="feSub"></span><button type="button" class="editbal" data-kind="ferie" aria-label="Modifica saldo ferie">Modifica</button></div>
       <div class="stat par"><span class="label"><svg class="ic" viewBox="0 0 28 28" aria-hidden="true" filter="url(#pencil)" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M8 4h12M8 24h12" stroke="#6f97b0" stroke-width="1.8"/><path d="M9.5 4c0 6 4.5 7 4.5 10s-4.5 4-4.5 10h9c0-6-4.5-7-4.5-10s4.5-4 4.5-10z" fill="#d9e7f0" stroke="#6f97b0" stroke-width="1.5"/><path d="M11 22.5h6l-3-3z" fill="#e9d9bf" stroke="#a99f8a" stroke-width="1"/></svg>PAR</span><span class="big" id="parTotal">0 min</span><span class="sub" id="parSub"></span><button type="button" class="editbal" data-kind="par" aria-label="Modifica saldo PAR">Modifica</button></div>
     </div>
     <div class="card baledit" id="balEdit" hidden>
       <div class="actions use setbal">
         <span class="setlbl" id="balTitle">Modifica saldo</span>
+        <button type="button" class="signbtn" id="setNeg" aria-pressed="false" aria-label="Saldo negativo" hidden>+</button>
         <span class="hm"><input type="number" id="setH" min="0" step="1" inputmode="numeric" placeholder="ore" aria-label="Ore"><span>h</span>
         <input type="number" id="setM" min="0" max="59" step="1" inputmode="numeric" placeholder="min" aria-label="Minuti"><span>min</span></span>
         <button type="button" class="primary" id="setBtn">Salva</button>
@@ -710,7 +712,7 @@ function renderMonth() {
 
   const tot = zTotal();
   $("zTotal").innerHTML = bigDur(tot);
-  $("sumLine").textContent = `Zainetto ${sdur(tot)} · Smart working ${sdur(swB)} · Ferie ${sdur(feB)} · PAR ${sdur(parB)}`;
+  $("sumLine").textContent = `Smart working ${sdur(swB)} · Zainetto ${sdur(tot)} · Ferie ${sdur(feB)} · PAR ${sdur(parB)}`;
   const monthDays = Object.keys(days).filter(d => d.startsWith(viewMonth)).sort();
   const earned = monthDays.reduce((s, d) => s + (days[d].extra || 0), 0);
   const spent = uses.filter(u => u.set == null && u.date.startsWith(viewMonth)).reduce((s, u) => s + u.min, 0) + usedIn("zaino");
@@ -729,13 +731,13 @@ function renderMonth() {
     const [yy, mm, dd] = x.d.split("-").map(Number);
     const label = new Date(yy, mm - 1, dd).toLocaleDateString("it-IT", { weekday: "short", day: "numeric" });
     if (x.kind === "use" && x.u.set != null) return `<li><span><span class="d">${label}</span><br><span class="t">Saldo zainetto impostato a mano</span></span>
-      <span class="plus">= ${dur(x.u.set)}</span><button type="button" data-del="use:${x.i}">Elimina</button></li>`;
+      <span class="plus">= ${sdur(x.u.set)}</span><button type="button" data-del="use:${x.i}">Elimina</button></li>`;
     if (x.kind === "fe") return `<li><span><span class="d">${label}</span><br><span class="t">Ferie: ${feBreak(x.r)}</span></span>
       <span class="fe-t">${feMin(x.d) >= WORK ? "giornata" : dur(feMin(x.d))}</span><button type="button" data-del="fe:${x.d}">Elimina</button></li>`;
     if (x.kind === "swd") return `<li><span><span class="d">${label}</span><br><span class="t">Smart working${x.d > today() ? " programmato" : ""}</span></span>
       <span class="sw-t">${swMin(x.d) >= WORK ? "giornata" : dur(swMin(x.d))}</span><button type="button" data-del="sw:${x.d}">Elimina</button></li>`;
     if (x.kind === "sal") return `<li><span><span class="d">${label}</span><br><span class="t">${x.x.kind === "sw" ? "Monte ore mensile smart working" : `Saldo ${x.x.kind === "par" ? "PAR" : "ferie"} impostato a mano`}</span></span>
-      <span class="plus">= ${dur(x.x.set)}</span><button type="button" data-del="sal:${x.i}">Elimina</button></li>`;
+      <span class="plus">= ${sdur(x.x.set)}</span><button type="button" data-del="sal:${x.i}">Elimina</button></li>`;
     if (x.kind === "use") return `<li><span><span class="d">${label}</span><br><span class="t">Usati dallo zainetto</span></span>
       <span class="minus">−${dur(x.u.min)}</span><button type="button" data-del="use:${x.i}">Elimina</button></li>`;
     const r = x.r;
@@ -808,7 +810,7 @@ ALL_KINDS.forEach(k => {
 const feAvail = k => (k === "sw" ? swLeft(feSel.slice(0, 7), draft) : balance(k, draftFe, draft)) + (k === "sw" ? swMin(feSel, draft) : ((draftFe[feSel] || {})[k] || 0)); // disponibili per il giorno aperto
 const feForm = () => { const r = {}; ALL_KINDS.forEach(k => { const v = Number($("fe_" + k).value); if (v) r[k] = v; }); return r; };
 function updFe() {
-  ALL_KINDS.forEach(k => $("feav_" + k).textContent = k === "giust" ? "nessun limite" : `disponibili ${sdur(feAvail(k))}`);
+  ALL_KINDS.forEach(k => $("feav_" + k).textContent = k === "giust" ? "nessun limite" : k === "zaino" || k === "par" ? `saldo ${sdur(feAvail(k))}, può andare in negativo` : `disponibili ${sdur(feAvail(k))}`);
   const tot = rTot(feForm());
   $("feTot").textContent = `Totale: ${tot ? dur(tot) : "0"} su 8 h` + (tot === WORK ? " · giornata intera" : tot > WORK ? " · troppe ore" : "");
 }
@@ -827,7 +829,7 @@ function confirmFe() {
   const r = feForm(), tot = rTot(r);
   if (!tot) { $("feMsg").textContent = "Scegli quante ore prendere."; return false; }
   if (tot > WORK) { $("feMsg").textContent = `In un giorno puoi prendere al massimo 8 h (ora sono ${dur(tot)}).`; return false; }
-  for (const k of ["sw", "ferie", "zaino", "par"]) {
+  for (const k of ["sw", "ferie"]) { // zainetto e PAR possono andare in negativo
     const av = feAvail(k);
     if ((r[k] || 0) > av) {
       $("feMsg").textContent = `${FE_NAMES[k]}: hai solo ${sdur(Math.max(0, av))} disponibili.` + (k === "zaino" ? "" : k === "sw" ? SW_HINT : SET_HINT);
@@ -896,8 +898,10 @@ document.querySelectorAll(".editbal").forEach(b => b.addEventListener("click", (
   closeBal(); balKind = b.dataset.kind; b.hidden = true;
   const box = b.closest(".stat"), anchor = box.parentElement.classList.contains("stats") ? box.parentElement : box;
   anchor.after($("balEdit"));
-  const cur = balKind === "sw" ? swQuota(today().slice(0, 7)) : Math.max(0, balance(balKind));
-  $("setH").value = Math.floor(cur / 60); $("setM").value = cur % 60;
+  const canNeg = balKind === "zaino" || balKind === "par"; // zainetto e PAR possono andare in negativo
+  const cur = balKind === "sw" ? swQuota(today().slice(0, 7)) : canNeg ? balance(balKind) : Math.max(0, balance(balKind));
+  $("setNeg").hidden = !canNeg; setNeg(cur < 0);
+  $("setH").value = Math.floor(Math.abs(cur) / 60); $("setM").value = Math.abs(cur) % 60;
   $("balTitle").textContent = balKind === "sw" ? "Monte ore mensile smart working" : "Saldo " + { zaino: "zainetto", ferie: "ferie", par: "PAR" }[balKind];
   $("setMsg").textContent = balKind === "zaino" ? "Per inserire i minuti che hai già o azzerarlo a fine anno."
     : balKind === "sw" ? "Ore di smart working che hai ogni mese: valgono da questo mese in poi e ogni mese ripartono da qui."
@@ -905,13 +909,16 @@ document.querySelectorAll(".editbal").forEach(b => b.addEventListener("click", (
   $("balEdit").hidden = false; $("setH").focus();
 }));
 $("balCancel").addEventListener("click", closeBal);
+function setNeg(on) { $("setNeg").setAttribute("aria-pressed", String(on)); $("setNeg").textContent = on ? "−" : "+"; }
+$("setNeg").addEventListener("click", () => setNeg($("setNeg").getAttribute("aria-pressed") !== "true"));
 $("setBtn").addEventListener("click", () => {
   if (!balKind) return;
   const h = Number($("setH").value || 0), m = Number($("setM").value || 0);
   if (!Number.isInteger(h) || !Number.isInteger(m) || h < 0 || m < 0 || m > 59 || ($("setH").value === "" && $("setM").value === "")) {
     $("setMsg").textContent = "Scrivi ore e minuti (minuti da 0 a 59)."; return;
   }
-  const target = h * 60 + m, which = balKind;
+  const which = balKind, neg = !$("setNeg").hidden && $("setNeg").getAttribute("aria-pressed") === "true";
+  const target = (neg ? -1 : 1) * (h * 60 + m);
   if (which === "sw") { saldi.push({ date: today(), kind: "sw", min: 0, set: target }); write(KEY_SALDI, saldi); } // vale da questo mese in poi
   else if (which === "ferie" || which === "par") { saldi.push({ date: today(), kind: which, min: balance(which) - target, set: target }); write(KEY_SALDI, saldi); }
   else uses.push({ date: today(), min: zTotal() - target, set: target }), write(KEY_USES, uses);
@@ -998,8 +1005,8 @@ function parseCsv(text) {
     else if (tipo.startsWith("smart")) ns[d] = num(c[6]) > 0 ? Math.min(WORK, num(c[6])) : WORK; // vecchi backup: giornata intera
     else if (tipo.startsWith("uso")) nu.push({ date: d, min: Math.abs(num(c[6])) });
     else if (tipo.startsWith("ferie")) { const r = {}; FE_KINDS.forEach((k, i) => { const v = Math.max(0, num(c[8 + i])); if (v) r[k] = v; }); if (Object.keys(r).length) nf[d] = r; }
-    else if (tipo.startsWith("saldo ferie") || tipo.startsWith("saldo par") || tipo.startsWith("saldo smart")) nsal.push({ date: d, kind: tipo.startsWith("saldo par") ? "par" : tipo.startsWith("saldo smart") ? "sw" : "ferie", min: -num(c[7]), set: Math.max(0, num(c[6])) });
-    else if (tipo.startsWith("saldo")) nu.push({ date: d, min: -num(c[7]), set: Math.max(0, num(c[6])) });
+    else if (tipo.startsWith("saldo ferie") || tipo.startsWith("saldo par") || tipo.startsWith("saldo smart")) nsal.push({ date: d, kind: tipo.startsWith("saldo par") ? "par" : tipo.startsWith("saldo smart") ? "sw" : "ferie", min: -num(c[7]), set: num(c[6]) });
+    else if (tipo.startsWith("saldo")) nu.push({ date: d, min: -num(c[7]), set: num(c[6]) });
   });
   return { [KEY_DAYS]: JSON.stringify(nd), [KEY_SW]: JSON.stringify(ns), [KEY_USES]: JSON.stringify(nu), [KEY_FE]: JSON.stringify(nf), [KEY_SALDI]: JSON.stringify(nsal), _info: [Object.keys(nd).length, Object.keys(ns).length, Object.keys(nf).length] };
 }
