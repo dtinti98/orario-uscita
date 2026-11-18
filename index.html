@@ -628,24 +628,35 @@ function registerDay() {
   const inn = toMin($("in").value), ls = toMin($("ls").value), le = toMin($("le").value), out = toMin($("out").value);
   if (inn == null) { $("saveMsg").textContent = "Inserisci l'orario di ingresso."; return; }
   if (out == null) { $("saveMsg").textContent = "Inserisci l'uscita effettiva per calcolare lo zainetto."; return; }
-  const extra = Math.max(0, out - expectedExit(inn, ls, le, workFor(today())).exit);
-  const rec = { extra }; ids.forEach(k => rec[k] = $(k).value);
+  const rec = { extra: 0 }; ids.forEach(k => rec[k] = $(k).value);
+  const extra = rec.extra = dayExtra(today(), rec);
   days[today()] = rec; write(KEY_DAYS, days);
   viewMonth = today().slice(0, 7);
   $("saveMsg").textContent = extra > 0 ? `Giornata registrata: +${dur(extra)} nello zainetto.` : "Giornata registrata.";
   renderMonth();
 }
 
-// Saldo dello zainetto: tutti i minuti accumulati meno quelli usati (l'azzeramento di fine anno si fa a mano con "Modifica saldo")
-function zTotal(fset = ferie) {
-  return Object.values(days).reduce((s, r) => s + (r.extra || 0), 0) - uses.reduce((s, u) => s + u.min, 0)
-    - Object.values(fset).reduce((s, r) => s + (r.zaino || 0), 0);
+// Minuti in più di una giornata registrata, ricalcolati dagli orari con le ore di lavoro di quel giorno:
+// se dopo aggiungi smart working o ferie a quel giorno, lo zainetto si aggiorna. Giornata tutta coperta = 0.
+function dayExtra(d, r) {
+  const inn = toMin(r.in), out = toMin(r.out);
+  if (inn == null || out == null) return r.extra || 0;
+  const work = workFor(d);
+  return work ? Math.max(0, out - expectedExit(inn, toMin(r.ls), toMin(r.le), work).exit) : 0;
 }
-// Saldo di Zainetto, Ferie o PAR: saldi impostati a mano meno le ore prese nei giorni di ferie (anche quelli programmati)
-function balance(kind, fset = ferie, sset = swDays) {
-  if (kind === "zaino") return zTotal(fset);
+// Ore di ferie/zainetto/PAR prese nei giorni del calendario; con upTo solo i giorni fino a quella data
+const feUsed = (kind, fset = ferie, upTo = null) => Object.keys(fset).filter(d => !upTo || d <= upTo).reduce((s, d) => s + (fset[d][kind] || 0), 0);
+const fePlanned = (kind, fset = ferie) => feUsed(kind, fset) - feUsed(kind, fset, today()); // giorni futuri già programmati
+// Saldo dello zainetto: tutti i minuti accumulati meno quelli usati (l'azzeramento di fine anno si fa a mano con "Modifica")
+function zTotal(fset = ferie, upTo = null) {
+  return Object.keys(days).reduce((s, d) => s + dayExtra(d, days[d]), 0) - uses.reduce((s, u) => s + u.min, 0) - feUsed("zaino", fset, upTo);
+}
+// Saldo di Zainetto, Ferie o PAR: saldi impostati a mano meno le ore prese nei giorni di ferie (anche quelli programmati,
+// a meno di upTo = oggi, che dà il saldo di oggi senza i giorni futuri)
+function balance(kind, fset = ferie, sset = swDays, upTo = null) {
+  if (kind === "zaino") return zTotal(fset, upTo);
   if (kind === "sw") return swLeft(today().slice(0, 7), sset);
-  return -saldi.filter(x => x.kind === kind).reduce((s, x) => s + x.min, 0) - Object.values(fset).reduce((s, r) => s + (r[kind] || 0), 0);
+  return -saldi.filter(x => x.kind === kind).reduce((s, x) => s + x.min, 0) - feUsed(kind, fset, upTo);
 }
 // Smart working: monte ore mensile che riparte ogni mese. Vale l'ultimo impostato fino a quel mese
 // (per i mesi prima del primo valore impostato vale il primo).
@@ -707,18 +718,18 @@ function renderMonth() {
   const feB = balance("ferie"), parB = balance("par");
   const usedIn = k => feDays.reduce((s, d) => s + (ferie[d][k] || 0), 0);
   $("feTotal").innerHTML = bigDur(feB); $("parTotal").innerHTML = bigDur(parB);
-  $("feSub").textContent = `≈ ${(feB / WORK).toLocaleString("it-IT", { maximumFractionDigits: 1 }).replace("-", "−")} giorni` + (usedIn("ferie") ? ` · questo mese −${dur(usedIn("ferie"))}` : "");
+  $("feSub").textContent = `≈ ${(feB / WORK).toLocaleString("it-IT", { maximumFractionDigits: 1 }).replace("-", "−")} giorni` + (usedIn("ferie") ? ` · questo mese −${dur(usedIn("ferie"))}` : "") + (fePlanned("ferie") ? ` · già tolte ${dur(fePlanned("ferie"))} programmate` : "");
   $("swTotal").innerHTML = bigDur(swB);
   $("swSub").textContent = `Rimaste nel mese su ${dur(swQ)}` + (swH ? ` · usate ${dur(swH)}` + (swPlan ? ` (${dur(swPlan)} programmate)` : "") : "");
-  $("parSub").textContent = usedIn("par") ? `Questo mese −${dur(usedIn("par"))}` : "Nessuna ora usata questo mese";
+  $("parSub").textContent = (usedIn("par") ? `Questo mese −${dur(usedIn("par"))}` : "Nessuna ora usata questo mese") + (fePlanned("par") ? ` · già tolte ${dur(fePlanned("par"))} programmate` : "");
 
   const tot = zTotal();
   $("zTotal").innerHTML = bigDur(tot);
   $("sumLine").textContent = `Smart working ${sdur(swB)} · Zainetto ${sdur(tot)} · Ferie ${sdur(feB)} · PAR ${sdur(parB)}`;
   const monthDays = Object.keys(days).filter(d => d.startsWith(viewMonth)).sort();
-  const earned = monthDays.reduce((s, d) => s + (days[d].extra || 0), 0);
+  const earned = monthDays.reduce((s, d) => s + dayExtra(d, days[d]), 0);
   const spent = uses.filter(u => u.set == null && u.date.startsWith(viewMonth)).reduce((s, u) => s + u.min, 0) + usedIn("zaino");
-  $("zMonth").textContent = `Questo mese: +${dur(earned)}` + (spent ? `, usati ${dur(spent)}` : "");
+  $("zMonth").textContent = `Questo mese: +${dur(earned)}` + (spent ? `, usati ${dur(spent)}` : "") + (fePlanned("zaino") ? ` · già tolti ${dur(fePlanned("zaino"))} programmati` : "");
 
   const items = [
     ...monthDays.map(d => ({ d, kind: "day", r: days[d] })),
@@ -745,7 +756,7 @@ function renderMonth() {
     const r = x.r;
     const times = `${r.in}${r.ls ? ` · pranzo ${r.ls}–${r.le || "?"}` : ""} · uscita ${r.out || "?"}`;
     return `<li><span><span class="d">${label}</span><br><span class="t">${times}</span></span>
-      <span class="plus">${r.extra ? "+" + dur(r.extra) : ""}</span><button type="button" data-del="day:${x.d}">Elimina</button></li>`;
+      <span class="plus">${dayExtra(x.d, r) ? "+" + dur(dayExtra(x.d, r)) : ""}</span><button type="button" data-del="day:${x.d}">Elimina</button></li>`;
   }).join("");
 }
 
@@ -896,13 +907,15 @@ document.querySelectorAll(".editbal").forEach(b => b.addEventListener("click", (
   const box = b.closest(".stat"), anchor = box.parentElement.classList.contains("stats") ? box.parentElement : box;
   anchor.after($("balEdit"));
   const canNeg = balKind === "zaino" || balKind === "par"; // zainetto e PAR possono andare in negativo
-  const cur = balKind === "sw" ? swQuota(today().slice(0, 7)) : canNeg ? balance(balKind) : Math.max(0, balance(balKind));
+  const now = balance(balKind, ferie, swDays, today()), plan = balKind === "sw" ? 0 : fePlanned(balKind);
+  const cur = balKind === "sw" ? swQuota(today().slice(0, 7)) : canNeg ? now : Math.max(0, now);
   $("setNeg").hidden = !canNeg; setNeg(cur < 0);
   $("setH").value = Math.floor(Math.abs(cur) / 60); $("setM").value = Math.abs(cur) % 60;
   $("balTitle").textContent = balKind === "sw" ? "Monte ore mensile smart working" : "Saldo " + { zaino: "zainetto", ferie: "ferie", par: "PAR" }[balKind];
   $("setMsg").textContent = balKind === "zaino" ? "Per inserire i minuti che hai già o azzerarlo a fine anno."
     : balKind === "sw" ? "Ore di smart working che hai ogni mese: valgono da questo mese in poi e ogni mese ripartono da qui."
     : "Scrivi le ore che hai a disposizione oggi.";
+  if (plan) $("setMsg").textContent += ` Le ${dur(plan)} dei giorni già programmati le tolgo io dopo.`;
   $("balEdit").hidden = false; $("setH").focus();
 }));
 $("balCancel").addEventListener("click", closeBal);
@@ -917,8 +930,8 @@ $("setBtn").addEventListener("click", () => {
   const which = balKind, neg = !$("setNeg").hidden && $("setNeg").getAttribute("aria-pressed") === "true";
   const target = (neg ? -1 : 1) * (h * 60 + m);
   if (which === "sw") { saldi.push({ date: today(), kind: "sw", min: 0, set: target }); write(KEY_SALDI, saldi); } // vale da questo mese in poi
-  else if (which === "ferie" || which === "par") { saldi.push({ date: today(), kind: which, min: balance(which) - target, set: target }); write(KEY_SALDI, saldi); }
-  else uses.push({ date: today(), min: zTotal() - target, set: target }), write(KEY_USES, uses);
+  else if (which === "ferie" || which === "par") { saldi.push({ date: today(), kind: which, min: balance(which, ferie, swDays, today()) - target, set: target }); write(KEY_SALDI, saldi); }
+  else uses.push({ date: today(), min: zTotal(ferie, today()) - target, set: target }), write(KEY_USES, uses);
   closeBal(); viewMonth = today().slice(0, 7); renderMonth();
 });
 $("zPrev").addEventListener("click", () => shift(-1));
@@ -975,7 +988,7 @@ const CSV_HEAD = ["tipo", "data", "ingresso", "inizio_pranzo", "fine_pranzo", "u
 // Una riga per ogni giornata in sede, giorno di smart working, uso dello zainetto o saldo impostato a mano
 function backupCsv() {
   const rows = [];
-  Object.keys(days).sort().forEach(d => { const r = days[d]; rows.push(["giornata in sede", d, r.in || "", r.ls || "", r.le || "", r.out || "", r.extra || 0, r.extra || 0]); });
+  Object.keys(days).sort().forEach(d => { const r = days[d]; const ex = dayExtra(d, r); rows.push(["giornata in sede", d, r.in || "", r.ls || "", r.le || "", r.out || "", ex, ex]); });
   Object.keys(swDays).sort().forEach(d => rows.push(["smart working", d, "", "", "", "", swMin(d), ""]));
   uses.forEach(u => rows.push(u.set != null
     ? ["saldo impostato", u.date, "", "", "", "", u.set, -u.min]
