@@ -253,8 +253,9 @@ details.extra > summary { font-style: italic; font-weight: 600; font-size: 19px;
 
 /* Ferie e permessi: giorni nel calendario (pieni = giornata intera, bordo = giornata ridotta) e saldi Ferie e PAR */
 .cal .where { margin: 0; }
-.where #pickSw:checked + label { background: var(--sw); color: var(--surface); }
-.where #pickFe:checked + label { background: var(--fe); color: var(--surface); }
+.big.swdays { font-size: 28px; line-height: 1.1; }
+.quickfill button { padding: 7px 12px; font-size: 13px; }
+.dots i.on.lv { background: linear-gradient(to top, var(--sw) var(--p), var(--sw-soft) var(--p)); }
 .cal-grid button.fe { background: var(--fe); color: var(--surface); }
 .cal-grid button.fe.plan { background: var(--fe-soft); color: var(--fe); border: 1.5px dashed var(--fe); }
 .cal-grid button.fe.part { border: 2px solid var(--fe); }
@@ -403,10 +404,6 @@ button.editbal { align-self: flex-start; margin-top: auto; padding: 5px 12px; fo
       <button type="button" id="next" aria-label="Mese successivo">›</button>
     </div>
     <div class="cal" id="cal">
-      <div class="where" id="calPick" role="radiogroup" aria-label="Cosa segni nel calendario" hidden>
-        <input type="radio" name="pick" id="pickSw" checked><label for="pickSw">Smart working</label>
-        <input type="radio" name="pick" id="pickFe"><label for="pickFe">Ore e ferie</label>
-      </div>
       <div class="cal-grid" id="calGrid"></div>
       <div class="legend"><span><i class="l1"></i>Smart working fatto</span><span><i class="l2"></i>Programmato</span><span><i class="l4"></i>Ferie</span><span><i class="l5"></i>Giornata ridotta</span><span><i class="l6"></i>Smart working a ore</span></div>
       <span class="sub" id="calHint"></span>
@@ -414,6 +411,7 @@ button.editbal { align-self: flex-start; margin-top: auto; padding: 5px 12px; fo
       <div class="fepanel" id="fePanel" hidden>
         <span class="fehead" id="feDay"></span>
         <span class="sub">Scegli come dividere le 8 ore del giorno.</span>
+        <div class="calbtns quickfill"><button type="button" class="primary sw-btn" id="feAllSw">Tutto smart working</button><button type="button" class="primary fe-btn" id="feAllFe">Tutto ferie</button></div>
         <div class="ferow"><label for="fe_sw">Smart working<br><span class="sub" id="feav_sw"></span></label><select id="fe_sw"></select></div>
         <div class="ferow"><label for="fe_ferie">Ferie<br><span class="sub" id="feav_ferie"></span></label><select id="fe_ferie"></select></div>
         <div class="ferow"><label for="fe_zaino">Zainetto<br><span class="sub" id="feav_zaino"></span></label><select id="fe_zaino"></select></div>
@@ -435,7 +433,7 @@ button.editbal { align-self: flex-start; margin-top: auto; padding: 5px 12px; fo
     </div>
     <div class="stat sw">
       <span class="label"><svg class="ic" viewBox="0 0 28 28" aria-hidden="true" filter="url(#pencil)" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M4 13 l10 -8 l10 8" stroke="currentColor" stroke-width="1.8"/><path d="M7 11 v13 h14 v-13" stroke="currentColor" stroke-width="1.6"/><path d="M11 24 h6 l-1 -5 h-4z" fill="#f5c9cf" stroke="#c98f98" stroke-width="1.2"/><path d="M14 19 v-4" stroke="#5e8b68" stroke-width="1.4"/><path d="M14 16 c-2 0 -3 -1 -3 -3 c2 0 3 1 3 3z M14 17 c2 0 3 -1 3 -3 c-2 0 -3 1 -3 3z" fill="#cfe3c4" stroke="#5e8b68" stroke-width="1"/></svg>Smart working nel mese</span>
-      <span class="big" id="swCount">0<small> / 10</small></span>
+      <span class="big swdays" id="swCount">0 giorni</span>
       <div class="dots" id="swDots"></div>
       <span class="sub" id="swLeft"></span>
     </div>
@@ -525,6 +523,10 @@ FE_NAMES.sw = "Smart working";
 const rTot = r => ALL_KINDS.reduce((s, k) => s + ((r && r[k]) || 0), 0);
 const workFor = d => Math.max(0, WORK - feMin(d) - swMin(d)); // ore in sede del giorno, tolti smart working, ferie e permessi
 const sdur = m => (m < 0 ? "−" : "") + dur(Math.abs(m));
+// Ore contate in giornate da 8 h: 10 h = "1 giorno e 2 h"
+const dayFmt = m => { const a = Math.abs(Math.round(m)), g = Math.floor(a / WORK), r = a % WORK;
+  const t = [g ? `${g} ${g === 1 ? "giorno" : "giorni"}` : "", r ? dur(r) : ""].filter(Boolean).join(" e ") || "0 giorni";
+  return (m < 0 ? "−" : "") + t; };
 const bigDur = m => sdur(m).replace(/ (\d+ min)$/, " <small>$1</small>"); // saldi grandi: minuti più piccoli
 const dayBreak = d => [swMin(d) ? `${dur(swMin(d))} di smart working` : "", feBreak(ferie[d])].filter(Boolean).join(", ");
 const feBreak = r => FE_KINDS.filter(k => r && r[k]).map(k => k === "giust" ? `${dur(r[k])} con giustificativo` : `${dur(r[k])} da ${FE_NAMES[k]}`).join(", ");
@@ -658,15 +660,13 @@ const SET_HINT = " Imposta il saldo da Oggi › Saldi.";
 const SW_HINT = " Imposta il monte ore da Oggi › Saldi › Smart working.";
 
 let draft = null, draftFe = null; // smart working e ferie in modifica (null = non in modifica)
-let pick = "sw", feSel = null;     // cosa si segna toccando i giorni; giorno aperto nel pannello ferie
+let feSel = null;                  // giorno aperto nel pannello del giorno
 function renderCalendar() {
   const set = draft || swDays, fset = draftFe || ferie, editing = !!draft;
   $("cal").classList.toggle("editing", editing);
-  $("calPick").hidden = !editing;
   $("editSw").hidden = editing; $("saveSw").hidden = !editing; $("cancelSw").hidden = !editing;
   $("calHint").textContent = !editing ? "Tocca un giorno segnato per vedere come è impostato."
-    : pick === "fe" ? "Tocca un giorno per scegliere quante ore di smart working, ferie o permessi, poi premi Salva."
-    : `Tocca i giorni per segnarli o toglierli come smart working (giornata intera), poi premi Salva. Per le ore usa "Ore e ferie".`;
+    : "Tocca un giorno per scegliere come dividere le 8 ore (smart working, ferie, permessi), poi premi Salva.";
   const [y, m] = viewMonth.split("-").map(Number);
   const first = new Date(y, m - 1, 1), nDays = new Date(y, m, 0).getDate();
   const offset = (first.getDay() + 6) % 7; // settimana da lunedì
@@ -693,9 +693,11 @@ function renderMonth() {
   const swMonth = Object.keys(swDays).filter(d => d.startsWith(viewMonth) && swMin(d)).sort();
   const swH = swMonth.reduce((s, d) => s + swMin(d), 0), swPlan = swMonth.filter(d => d > today()).reduce((s, d) => s + swMin(d), 0);
   const swB = swLeft(viewMonth), swQ = swQuota(viewMonth);
-  $("swCount").innerHTML = bigDur(swH);
-  $("swDots").innerHTML = Array.from({ length: SW_LEAVES }, (_, i) => `<i class="${i < swMonth.length ? "on" : ""}"></i>`).join("");
-  $("swLeft").textContent = `In ${swMonth.length} ${swMonth.length === 1 ? "giorno" : "giorni"}` + (swPlan ? ` · ${dur(swPlan)} programmate` : "") + ` · restano ${sdur(swB)} su ${dur(swQ)}`;
+  $("swCount").textContent = dayFmt(swB);
+  // Le 10 foglie sono il monte ore del mese: si riempiono in percentuale con le ore usate
+  const filled = swQ > 0 ? Math.min(1, swH / swQ) * SW_LEAVES : swH ? SW_LEAVES : 0;
+  $("swDots").innerHTML = Array.from({ length: SW_LEAVES }, (_, i) => `<i class="on lv" style="--p:${Math.round(Math.max(0, Math.min(1, filled - i)) * 100)}%"></i>`).join("");
+  $("swLeft").textContent = `Rimasti su ${dayFmt(swQ)} · usati ${dayFmt(swH)}` + (swPlan ? ` (${dayFmt(swPlan)} programmati)` : "");
   const dlabel = (d, opt) => { const [yy, mm, dd] = d.split("-").map(Number); return new Date(yy, mm - 1, dd).toLocaleDateString("it-IT", opt); };
   const feDays = Object.keys(ferie).filter(d => d.startsWith(viewMonth)).sort();
   $("feList").innerHTML = feDays.length
@@ -752,13 +754,7 @@ $("calGrid").addEventListener("click", e => {
   if (!draft) { showFeInfo(b.dataset.day); return; } // fuori modifica: dettaglio del giorno di ferie
   const d = b.dataset.day;
   $("calMsg").textContent = "";
-  if (pick === "fe") { openFe(d); return; }
-  const need = WORK - feMin(d, draftFe), av = swLeft(d.slice(0, 7), draft);
-  if (draft[d]) delete draft[d];
-  else if (need <= 0) $("calMsg").textContent = "In questo giorno sei in ferie: togli prima le ferie per segnarlo come smart working.";
-  else if (av < need) $("calMsg").textContent = `Smart working: in questo mese restano solo ${sdur(Math.max(0, av))}.` + SW_HINT;
-  else draft[d] = need; // il resto della giornata (8 h meno eventuali ferie)
-  renderCalendar();
+  openFe(d); // in modifica ogni giorno si apre nel pannello: smart working, ferie e permessi insieme
 });
 function closeFe() { feSel = null; $("fePanel").hidden = true; infoSel = null; if ($("feInfo").open) $("feInfo").close(); }
 // Dettaglio di un giorno di ferie: quante ore da Ferie, Zainetto, PAR o con giustificativo
@@ -784,12 +780,11 @@ $("feInfo").addEventListener("click", e => { if (e.target === $("feInfo")) $("fe
 $("feInfo").addEventListener("close", () => { infoSel = null; renderCalendar(); });
 $("feInfoEdit").addEventListener("click", () => {
   const d = infoSel; $("feInfo").close();
-  pick = "fe"; $("editSw").click(); if (d) openFe(d);
+  $("editSw").click(); if (d) openFe(d);
 });
 function closeEdit() { draft = draftFe = null; closeFe(); $("calMsg").textContent = ""; }
 $("editSw").addEventListener("click", () => {
   draft = { ...swDays }; draftFe = JSON.parse(JSON.stringify(ferie)); closeFe();
-  $("pickSw").checked = pick === "sw"; $("pickFe").checked = pick === "fe";
   $("calMsg").textContent = ""; renderCalendar();
 });
 $("cancelSw").addEventListener("click", () => { closeEdit(); renderCalendar(); });
@@ -798,8 +793,10 @@ $("saveSw").addEventListener("click", () => {
   swDays = draft; ferie = draftFe; write(KEY_SW, swDays); write(KEY_FE, ferie);
   closeEdit(); renderMode(); renderMonth(); render();
 });
-$("pickSw").addEventListener("change", () => { pick = "sw"; closeFe(); $("calMsg").textContent = ""; renderCalendar(); });
-$("pickFe").addEventListener("change", () => { pick = "fe"; closeFe(); $("calMsg").textContent = ""; renderCalendar(); });
+// Riempimento rapido del giorno: tutte le 8 ore in smart working o in ferie
+const fillAll = kind => { ALL_KINDS.forEach(k => $("fe_" + k).value = String(k === kind ? WORK : 0)); $("feMsg").textContent = ""; updFe(); };
+$("feAllSw").addEventListener("click", () => fillAll("sw"));
+$("feAllFe").addEventListener("click", () => fillAll("ferie"));
 
 // Pannello del giorno di ferie: quante ore prendere da Ferie, Zainetto, PAR o con giustificativo
 const hmLbl = m => !m ? "0" : m < 60 ? `${m} min` : `${Math.floor(m / 60)} h${m % 60 ? ` ${m % 60} min` : ""}`;
@@ -816,7 +813,7 @@ function updFe() {
 }
 function openFe(d) {
   feSel = d;
-  const r = draftFe[d] || draft[d] ? { ...(draftFe[d] || {}), sw: swMin(d, draft) } : { ferie: WORK };
+  const r = { ...(draftFe[d] || {}), sw: swMin(d, draft) }; // giorno vuoto: tutto a 0
   ALL_KINDS.forEach(k => $("fe_" + k).value = String(r[k] || 0));
   const [y, m, dd] = d.split("-").map(Number);
   $("feDay").textContent = new Date(y, m - 1, dd).toLocaleDateString("it-IT", { weekday: "long", day: "numeric", month: "long" });
