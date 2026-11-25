@@ -13,14 +13,14 @@
 <style>
 /* Layout: una colonna stretta. Vista "In sede": uscita, orari, saldi apribili (zainetto, ferie, PAR). Vista "Smart working": calendario (smart working e ferie) e conteggio del mese */
 :root { padding-block: env(safe-area-inset-top,0px) env(safe-area-inset-bottom,0px);
-  --bg: #f7f2e8; --surface: #fffdf7; --fg: #3e4a40; --muted: #7f8b80; --line: #c9bfa8; --accent: #5e8b68; --accent-soft: #e5efdc; --warn: #c07454; --sw: #8079bf; --sw-soft: #ece8f7; --fe: #a8741f; --fe-soft: #f8ead0; --par: #5f87a0; --pink: #f5dede; --pencil: #a99f8a; --twig: #8b6243;
+  --bg: #f7f2e8; --surface: #fffdf7; --fg: #3e4a40; --muted: #7f8b80; --line: #c9bfa8; --accent: #5e8b68; --accent-soft: #e5efdc; --warn: #c07454; --sw: #8079bf; --sw-soft: #ece8f7; --fe: #a8741f; --fe-soft: #f8ead0; --par: #5f87a0; --pink: #f5dede; --pencil: #a99f8a; --twig: #8b6243; --tr: #cf6a1e; --tr-soft: #fde4cf; --festa: #c4403a;
   --display: "Fraunces", Georgia, serif; --hand: "Caveat", cursive;
   --body: "Quicksand", ui-sans-serif, system-ui, -apple-system, sans-serif;
 }
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
-  --bg: #1f231f; --surface: #2a2f2a; --fg: #ece6d9; --muted: #a9b0a2; --line: #4a5048; --accent: #a8cfa9; --accent-soft: #2e3a2f; --warn: #e6a587; --sw: #bdb6ee; --sw-soft: #34324a; --fe: #e9bf74; --fe-soft: #45391f; --par: #a3c6dc; --pink: #4a3536; --pencil: #7d8274; --twig: #c9a27c; color-scheme: dark } }
+  --bg: #1f231f; --surface: #2a2f2a; --fg: #ece6d9; --muted: #a9b0a2; --line: #4a5048; --accent: #a8cfa9; --accent-soft: #2e3a2f; --warn: #e6a587; --sw: #bdb6ee; --sw-soft: #34324a; --fe: #e9bf74; --fe-soft: #45391f; --par: #a3c6dc; --pink: #4a3536; --pencil: #7d8274; --twig: #c9a27c; --tr: #f2a25e; --tr-soft: #4a3322; --festa: #ee8a82; color-scheme: dark } }
 :root[data-theme="dark"] {
-  --bg: #1f231f; --surface: #2a2f2a; --fg: #ece6d9; --muted: #a9b0a2; --line: #4a5048; --accent: #a8cfa9; --accent-soft: #2e3a2f; --warn: #e6a587; --sw: #bdb6ee; --sw-soft: #34324a; --fe: #e9bf74; --fe-soft: #45391f; --par: #a3c6dc; --pink: #4a3536; --pencil: #7d8274; --twig: #c9a27c; color-scheme: dark }
+  --bg: #1f231f; --surface: #2a2f2a; --fg: #ece6d9; --muted: #a9b0a2; --line: #4a5048; --accent: #a8cfa9; --accent-soft: #2e3a2f; --warn: #e6a587; --sw: #bdb6ee; --sw-soft: #34324a; --fe: #e9bf74; --fe-soft: #45391f; --par: #a3c6dc; --pink: #4a3536; --pencil: #7d8274; --twig: #c9a27c; --tr: #f2a25e; --tr-soft: #4a3322; --festa: #ee8a82; color-scheme: dark }
 
 body { margin: 0; background: var(--bg); color: var(--fg); font-family: var(--body); font-size: 15px; }
 main { max-width: 440px; margin: 0 auto; padding-block: 28px 40px;
@@ -297,6 +297,25 @@ button.editbal { align-self: flex-start; margin-top: auto; padding: 5px 12px; fo
 .cal-grid button.swp { background: transparent; color: var(--sw); border: 2px solid var(--sw); }
 .cal-grid button.swp.plan { border-style: dashed; }
 .legend .l6 { border: 2px solid var(--sw); box-sizing: border-box; }
+/* Trasferte e notti in arancione, feste in rosso pieno (anche se programmate) */
+.cal-grid { position: relative; }
+.cal-grid button.tr { background: var(--tr); color: var(--surface); }
+.cal-grid button.tr.plan { background: var(--tr-soft); color: var(--tr); border: 1.5px dashed var(--tr); }
+.cal-grid button.trx { box-shadow: 0 0 0 2.5px var(--tr); }
+.cal-grid button.festa, .cal-grid button.festa.plan { background: var(--festa); color: var(--surface); border: 1.5px solid var(--festa); }
+.nights { position: absolute; left: 0; top: 0; pointer-events: none; overflow: visible; }
+.nights path { fill: none; stroke: var(--tr); stroke-width: 2; stroke-dasharray: 4 3; stroke-linecap: round; }
+.legend .l7 { background: var(--tr); } .legend .l9 { background: var(--festa); }
+.legend .l8 { width: 18px; height: 8px; border: 2px dashed var(--tr); border-bottom: 0; border-radius: 10px 10px 0 0; box-sizing: border-box; vertical-align: 0; }
+.segni { display: flex; flex-wrap: wrap; gap: 8px; }
+.segni button { padding: 7px 14px; font-size: 13px; color: var(--tr); border: 1.5px dashed var(--tr); background: var(--surface); }
+.segni button[aria-pressed="true"] { background: var(--tr); border-style: solid; color: var(--surface); }
+.segni button#sg_festa { color: var(--festa); border-color: var(--festa); }
+.segni button#sg_festa[aria-pressed="true"] { background: var(--festa); color: var(--surface); }
+.fehours { display: flex; flex-direction: column; gap: 10px; }
+.fehours[hidden] { display: none; }
+.stat.tr .label { color: var(--tr); }
+.fedlg .felist li.sg { background: var(--tr-soft); } .fedlg .felist li.sgf { background: var(--festa); color: var(--surface); }
 .signbtn { width: 40px; height: 40px; padding: 0; font: 700 20px/1 var(--display); }
 .signbtn[aria-pressed="true"] { color: var(--warn); border-color: var(--warn); }
 .log .sw-t { font-weight: 600; color: var(--sw); }
@@ -405,11 +424,14 @@ button.editbal { align-self: flex-start; margin-top: auto; padding: 5px 12px; fo
     </div>
     <div class="cal" id="cal">
       <div class="cal-grid" id="calGrid"></div>
-      <div class="legend"><span><i class="l1"></i>Smart working fatto</span><span><i class="l2"></i>Programmato</span><span><i class="l4"></i>Ferie</span><span><i class="l5"></i>Giornata ridotta</span><span><i class="l6"></i>Smart working a ore</span></div>
+      <div class="legend"><span><i class="l1"></i>Smart working fatto</span><span><i class="l2"></i>Programmato</span><span><i class="l4"></i>Ferie</span><span><i class="l5"></i>Giornata ridotta</span><span><i class="l6"></i>Smart working a ore</span><span><i class="l7"></i>Trasferta</span><span><i class="l8"></i>Notte</span><span><i class="l9"></i>Festa</span></div>
       <span class="sub" id="calHint"></span>
       <span class="calmsg" id="calMsg"></span>
       <div class="fepanel" id="fePanel" hidden>
         <span class="fehead" id="feDay"></span>
+        <div class="segni" role="group" aria-label="Segna il giorno"><button type="button" id="sg_trasf" aria-pressed="false">Trasferta</button><button type="button" id="sg_notte" aria-pressed="false">Notte</button><button type="button" id="sg_festa" aria-pressed="false">Festa</button></div>
+        <span class="sub" id="sgNote"></span>
+        <div class="fehours" id="feHours">
         <span class="sub">Scegli come dividere le 8 ore del giorno.</span>
         <div class="calbtns quickfill"><button type="button" class="primary sw-btn" id="feAllSw">Tutto smart working</button><button type="button" class="primary fe-btn" id="feAllFe">Tutto ferie</button></div>
         <div class="ferow"><label for="fe_sw">Smart working<br><span class="sub" id="feav_sw"></span></label><select id="fe_sw"></select></div>
@@ -418,6 +440,7 @@ button.editbal { align-self: flex-start; margin-top: auto; padding: 5px 12px; fo
         <div class="ferow"><label for="fe_par">PAR<br><span class="sub" id="feav_par"></span></label><select id="fe_par"></select></div>
         <div class="ferow"><label for="fe_giust">Giustificativo<br><span class="sub" id="feav_giust"></span></label><select id="fe_giust"></select></div>
         <span class="fetot" id="feTot"></span>
+        </div>
         <span class="calmsg" id="feMsg"></span>
         <div class="calbtns">
           <button type="button" class="primary fe-btn" id="feOk">Conferma giorno</button>
@@ -441,6 +464,11 @@ button.editbal { align-self: flex-start; margin-top: auto; padding: 5px 12px; fo
       <span class="label"><svg class="ic" viewBox="0 0 28 28" aria-hidden="true" filter="url(#pencil)" fill="none" stroke-linecap="round" stroke-linejoin="round"><circle cx="14" cy="14" r="5.5" fill="#f6dc94" stroke="#c99a3e" stroke-width="1.6"/><path d="M14 3.5v3M14 21.5v3M3.5 14h3M21.5 14h3M6.6 6.6l2.1 2.1M19.3 19.3l2.1 2.1M6.6 21.4l2.1-2.1M19.3 8.7l2.1-2.1" stroke="#c99a3e" stroke-width="1.6"/></svg>Ferie e permessi del mese</span>
       <ul class="felist" id="feList"></ul>
       <span class="sub" id="feBal"></span>
+    </div>
+    <div class="stat tr">
+      <span class="label"><svg class="ic" viewBox="0 0 28 28" aria-hidden="true" filter="url(#pencil)" fill="none" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="9" width="20" height="14" rx="2.5" fill="#fde4cf" stroke="#cf6a1e" stroke-width="1.6"/><path d="M10.5 9 v-3 h7 v3" stroke="#cf6a1e" stroke-width="1.6"/><path d="M4 15 h20" stroke="#cf6a1e" stroke-width="1.2" stroke-dasharray="2 2.5"/></svg>Trasferte, notti e feste del mese</span>
+      <ul class="felist" id="sgList"></ul>
+      <span class="sub" id="sgCount"></span>
     </div>
     </div>
   </div>
@@ -496,7 +524,7 @@ button.editbal { align-self: flex-start; margin-top: auto; padding: 5px 12px; fo
 
 <script>
 const WORK = 480, MIN_LUNCH = 30, SW_LEAVES = 10, SHORT_DAY = 360;
-const KEY = "orario-uscita", KEY_DAYS = "orario-giorni", KEY_USES = "orario-zainetto-usi", KEY_SW = "orario-smart", KEY_FE = "orario-ferie", KEY_SALDI = "orario-saldi";
+const KEY = "orario-uscita", KEY_DAYS = "orario-giorni", KEY_USES = "orario-zainetto-usi", KEY_SW = "orario-smart", KEY_FE = "orario-ferie", KEY_SALDI = "orario-saldi", KEY_SG = "orario-segni";
 const $ = id => document.getElementById(id);
 const ids = ["in", "ls", "le", "out"];
 const toMin = v => { if (!v) return null; const [h, m] = v.split(":").map(Number); return h * 60 + m; };
@@ -513,6 +541,7 @@ let days = read(KEY_DAYS, {});     // giornate in sede: { "2026-11-12": {in, ls,
 let uses = read(KEY_USES, []);     // minuti usati dallo zainetto: [{ date, min }]
 let swDays = read(KEY_SW, {});     // ore di smart working per giorno, in minuti: { "2026-11-14": 480 }
 let ferie = read(KEY_FE, {});      // ferie e permessi in minuti: { "2026-11-20": { ferie: 480, zaino: 0, par: 0, giust: 0 } }
+let segni = read(KEY_SG, {});     // trasferte, notti e feste: { "2026-11-25": { trasf: 1, notte: 1, festa: 1 } } (non scalano saldi)
 let saldi = read(KEY_SALDI, []);   // saldi Smart working, Ferie e PAR impostati a mano: [{ date, kind: "sw" | "ferie" | "par", min, set }]
 const FE_KINDS = ["ferie", "zaino", "par", "giust"];
 const FE_NAMES = { ferie: "Ferie", zaino: "Zainetto", par: "PAR", giust: "Giustificativo" };
@@ -521,7 +550,11 @@ const swMin = (d, set = swDays) => set[d] === true ? WORK : (set[d] || 0); // mi
 const ALL_KINDS = ["sw", ...FE_KINDS];
 FE_NAMES.sw = "Smart working";
 const rTot = r => ALL_KINDS.reduce((s, k) => s + ((r && r[k]) || 0), 0);
-const workFor = d => Math.max(0, WORK - feMin(d) - swMin(d)); // ore in sede del giorno, tolti smart working, ferie e permessi
+const SG_KINDS = ["trasf", "notte", "festa"], SG_NAMES = { trasf: "Trasferta", notte: "Notte", festa: "Festa" };
+const isFesta = (d, set = segni) => !!(set[d] && set[d].festa); // festa: non si lavora
+const addDays = (d, n) => { const [y, m, dd] = d.split("-").map(Number); return dayKey(new Date(y, m - 1, dd + n)); };
+const shortDay = d => { const [y, m, dd] = d.split("-").map(Number); return new Date(y, m - 1, dd).toLocaleDateString("it-IT", { weekday: "long", day: "numeric" }); };
+const workFor = d => isFesta(d) ? 0 : Math.max(0, WORK - feMin(d) - swMin(d)); // ore in sede del giorno, tolti smart working, ferie e permessi
 const sdur = m => (m < 0 ? "−" : "") + dur(Math.abs(m));
 // Ore contate in giornate da 8 h: 10 h = "1 giorno e 2 h"
 const dayFmt = m => { const a = Math.abs(Math.round(m)), g = Math.floor(a / WORK), r = a % WORK;
@@ -559,19 +592,19 @@ let mode = "sede";
 function renderMode() {
   const cal = mode === "sw", t = today();
   $("sw").checked = cal; $("sede").checked = !cal;
-  const sMin = swMin(t), fMin = feMin(t), full = sMin + fMin >= WORK; // giornata coperta: niente orari
+  const sMin = swMin(t), fMin = feMin(t), festa = isFesta(t), full = festa || sMin + fMin >= WORK; // giornata coperta: niente orari
   $("office").hidden = cal || full; $("resultCard").hidden = cal || full; $("foot").hidden = cal || full;
   $("feCard").hidden = cal || !full;
   $("feCard").classList.toggle("fecard", !sMin);
-  $("feCardTitle").textContent = !sMin ? "Ferie" : !fMin ? "Smart working" : "Smart working e ferie";
+  $("feCardTitle").textContent = festa ? "Festa" : !sMin ? "Ferie" : !fMin ? "Smart working" : "Smart working e ferie";
   $("feCardIcFe").hidden = !!sMin; $("feCardIcSw").hidden = !sMin;
-  $("feCardTxt").textContent = full ? `${dayBreak(t)}. Oggi non serve inserire orari.` : "";
+  $("feCardTxt").textContent = festa ? "Oggi è festa, non si lavora." : full ? `${dayBreak(t)}. Oggi non serve inserire orari.` : "";
   $("goOffice").hidden = !full || !sMin;
   $("swCard").hidden = !cal;
   $("calSlotMain").hidden = !cal; $("extra").hidden = cal;
-  $("swCardTxt").textContent = sMin ? `Oggi: ${dayBreak(t)} ✓` : fMin >= WORK ? "Oggi sei in ferie." : "Oggi non è segnato lo smart working.";
-  $("swCard").classList.toggle("warn", !sMin && fMin < WORK);
-  $("markToday").hidden = !!sMin || fMin >= WORK;
+  $("swCardTxt").textContent = festa ? "Oggi è festa." : sMin ? `Oggi: ${dayBreak(t)} ✓` : fMin >= WORK ? "Oggi sei in ferie." : "Oggi non è segnato lo smart working.";
+  $("swCard").classList.toggle("warn", !festa && !sMin && fMin < WORK);
+  $("markToday").hidden = festa || !!sMin || fMin >= WORK;
   $("markToday").textContent = fMin ? `Segna oggi ${dur(WORK - fMin)} di smart working` : "Segna oggi come smart working";
 }
 
@@ -670,14 +703,14 @@ const swLeft = (month, sset = swDays) => swQuota(month) - swUsedIn(month, sset);
 const SET_HINT = " Imposta il saldo da Oggi › Saldi.";
 const SW_HINT = " Imposta il monte ore da Oggi › Saldi › Smart working.";
 
-let draft = null, draftFe = null; // smart working e ferie in modifica (null = non in modifica)
+let draft = null, draftFe = null, draftSg = null; // smart working, ferie e segni in modifica (null = non in modifica)
 let feSel = null;                  // giorno aperto nel pannello del giorno
 function renderCalendar() {
-  const set = draft || swDays, fset = draftFe || ferie, editing = !!draft;
+  const set = draft || swDays, fset = draftFe || ferie, sgs = draftSg || segni, editing = !!draft;
   $("cal").classList.toggle("editing", editing);
   $("editSw").hidden = editing; $("saveSw").hidden = !editing; $("cancelSw").hidden = !editing;
   $("calHint").textContent = !editing ? "Tocca un giorno segnato per vedere come è impostato."
-    : "Tocca un giorno per scegliere come dividere le 8 ore (smart working, ferie, permessi), poi premi Salva.";
+    : "Tocca un giorno per dividere le 8 ore (smart working, ferie, permessi) o segnare trasferta, notte e festa, poi premi Salva.";
   const [y, m] = viewMonth.split("-").map(Number);
   const first = new Date(y, m - 1, 1), nDays = new Date(y, m, 0).getDate();
   const offset = (first.getDay() + 6) % 7; // settimana da lunedì
@@ -686,15 +719,48 @@ function renderCalendar() {
   html += "<span></span>".repeat(offset);
   for (let d = 1; d <= nDays; d++) {
     const key = `${viewMonth}-${pad(d)}`, wd = (offset + d - 1) % 7;
-    const f = feMin(key, fset), sm = swMin(key, set);
-    const cls = [wd >= 5 ? "we" : "", key === t ? "today" : "", sm ? (sm >= WORK || f ? "sw" : "swp") : "", f ? (f >= WORK ? "fe" : "fe part") : "",
-      (sm || f) && key > t ? "plan" : "", key === feSel || key === infoSel ? "sel" : ""].filter(Boolean).join(" ");
-    const parts = [sm ? (sm >= WORK ? "smart working" : `smart working ${dur(sm)}`) : "", f ? (f >= WORK ? "ferie" : `giornata ridotta, ${dur(f)} di permesso`) : "", (sm || f) && key > t ? "programmato" : ""];
+    const g = sgs[key] || {}, fs = !!g.festa, f = fs ? 0 : feMin(key, fset), sm = fs ? 0 : swMin(key, set), any = !!(sm || f || g.trasf || g.notte || fs);
+    const cls = [wd >= 5 ? "we" : "", key === t ? "today" : "", fs ? "festa" : "", sm ? (sm >= WORK || f ? "sw" : "swp") : "", f ? (f >= WORK ? "fe" : "fe part") : "",
+      g.trasf && !fs ? (sm || f ? "trx" : "tr") : "", any && key > t ? "plan" : "", key === feSel || key === infoSel ? "sel" : ""].filter(Boolean).join(" ");
+    const parts = [fs ? "festa" : "", sm ? (sm >= WORK ? "smart working" : `smart working ${dur(sm)}`) : "", f ? (f >= WORK ? "ferie" : `giornata ridotta, ${dur(f)} di permesso`) : "",
+      g.trasf ? "trasferta" : "", g.notte ? "notte fino al giorno dopo" : "", any && key > t && !fs ? "programmato" : ""];
     const lbl = [d, ...parts.filter(Boolean)].join(", ");
-    html += `<button type="button" class="${cls}" data-day="${key}" aria-label="${lbl}" aria-pressed="${!!(sm || f)}"${editing || sm || f ? "" : " disabled"}>${d}</button>`;
+    html += `<button type="button" class="${cls}" data-day="${key}" aria-label="${lbl}" aria-pressed="${any}"${editing || any ? "" : " disabled"}>${d}</button>`;
   }
   $("calGrid").innerHTML = html;
+  drawNights();
 }
+// Notti: arco tratteggiato arancione tra il giorno e quello dopo (a fine riga o fine mese l'arco esce dal bordo)
+function drawNights() {
+  const g = $("calGrid"), sgs = draftSg || segni, gr = g.getBoundingClientRect();
+  g.querySelectorAll(".nights").forEach(n => n.remove());
+  if (!gr.width) return;
+  const pos = k => { const b = g.querySelector(`[data-day="${k}"]`); if (!b) return null; const r = b.getBoundingClientRect(); return { x: r.left - gr.left + r.width / 2, top: r.top - gr.top, w: r.width }; };
+  const btns = [...g.querySelectorAll("[data-day]")];
+  if (!btns.length) return;
+  const step = btns[0].getBoundingClientRect().width + (parseFloat(getComputedStyle(g).columnGap) || 0); // distanza tra due colonne
+  // Arco da (x0) a (x0 + step - w/2): parte e arriva sul bordo alto dei due cerchi, sale nello spazio tra le righe
+  const geo = (a, x0) => { const y = a.top + a.w * 0.07, x2 = x0 + step - a.w * 0.5, c = { x: (x0 + x2) / 2, y: a.top - a.w * 0.36 }; return { y, x2, c }; };
+  let out = "";
+  btns.forEach(b => {
+    const k = b.dataset.day, a = pos(k);
+    if (sgs[k] && sgs[k].notte) {
+      const x0 = a.x + a.w * 0.25, { y, x2, c } = geo(a, x0), n = pos(addDays(k, 1));
+      if (n && Math.abs(n.top - a.top) < 2) out += `<path d="M${x0} ${y} Q${c.x} ${c.y} ${x2} ${y}"/>`;
+      else { const m = { x: (x0 + 2 * c.x + x2) / 4, y: (y + 2 * c.y + y) / 4 }; out += `<path d="M${x0} ${y} Q${(x0 + c.x) / 2} ${(y + c.y) / 2} ${m.x} ${m.y}"/>`; }
+    }
+    const pk = addDays(k, -1);
+    if (sgs[pk] && sgs[pk].notte) { // notte che arriva dal giorno prima, se il giorno prima è su un'altra riga o in un altro mese
+      const p = pos(pk);
+      if (!p || Math.abs(p.top - a.top) >= 2) {
+        const x0 = a.x - step + a.w * 0.25, { y, x2, c } = geo(a, x0), m = { x: (x0 + 2 * c.x + x2) / 4, y: (y + 2 * c.y + y) / 4 };
+        out += `<path d="M${m.x} ${m.y} Q${(c.x + x2) / 2} ${(c.y + y) / 2} ${x2} ${y}"/>`;
+      }
+    }
+  });
+  if (out) g.insertAdjacentHTML("beforeend", `<svg class="nights" width="${gr.width}" height="${gr.height}" aria-hidden="true">${out}</svg>`);
+}
+try { new ResizeObserver(() => drawNights()).observe($("calGrid")); } catch (e) {}
 
 function renderMonth() {
   const [y, m] = viewMonth.split("-").map(Number);
@@ -714,6 +780,13 @@ function renderMonth() {
   $("feList").innerHTML = feDays.length
     ? feDays.map(d => `<li><span class="d">${dlabel(d, { weekday: "short", day: "numeric" })}</span><span class="t">${feBreak(ferie[d])}</span></li>`).join("")
     : `<li class="sub">Nessuna ferie in questo mese.</li>`;
+  const sgDays = Object.keys(segni).filter(d => d.startsWith(viewMonth) && SG_KINDS.some(k => segni[d][k])).sort();
+  const sgN = k => sgDays.filter(d => segni[d][k]).length;
+  $("sgList").innerHTML = sgDays.length
+    ? sgDays.map(d => `<li><span class="d">${dlabel(d, { weekday: "short", day: "numeric" })}</span><span class="t">${SG_KINDS.filter(k => segni[d][k]).map(k => k === "notte" ? `notte fino a ${dlabel(addDays(d, 1), { weekday: "short", day: "numeric" })}` : SG_NAMES[k].toLowerCase()).join(", ")}</span></li>`).join("")
+    : `<li class="sub">Nessuna trasferta, notte o festa in questo mese.</li>`;
+  const n1 = sgN("trasf"), n2 = sgN("notte"), n3 = sgN("festa");
+  $("sgCount").textContent = sgDays.length ? [n1 ? `${n1} ${n1 === 1 ? "trasferta" : "trasferte"}` : "", n2 ? `${n2} ${n2 === 1 ? "notte" : "notti"}` : "", n3 ? `${n3} ${n3 === 1 ? "festa" : "feste"}` : ""].filter(Boolean).join(" · ") : "";
   $("feBal").textContent = `Saldi: Smart working ${sdur(swB)} nel mese · Ferie ${sdur(balance("ferie"))} · PAR ${sdur(balance("par"))} · Zainetto ${sdur(zTotal())}`;
   const feB = balance("ferie"), parB = balance("par");
   const usedIn = k => feDays.reduce((s, d) => s + (ferie[d][k] || 0), 0);
@@ -771,16 +844,19 @@ function closeFe() { feSel = null; $("fePanel").hidden = true; infoSel = null; i
 // Dettaglio di un giorno di ferie: quante ore da Ferie, Zainetto, PAR o con giustificativo
 let infoSel = null;
 function showFeInfo(d) {
-  const r = (d && ferie[d]) || {}, sm = d ? swMin(d) : 0;
-  infoSel = d && (sm || ferie[d]) ? d : null;
+  const r = (d && ferie[d]) || {}, sm = d ? swMin(d) : 0, g = (d && segni[d]) || {};
+  infoSel = d && (sm || ferie[d] || SG_KINDS.some(k => g[k])) ? d : null;
   if (!infoSel) { if ($("feInfo").open) $("feInfo").close(); renderCalendar(); return; }
   {
     const [y, m, dd] = d.split("-").map(Number), f = feMin(d), tot = f + sm;
     $("feInfoDay").textContent = new Date(y, m - 1, dd).toLocaleDateString("it-IT", { weekday: "long", day: "numeric", month: "long" });
     $("feInfoList").innerHTML = (sm ? `<li><span class="d">${dur(sm)}</span>di smart working</li>` : "")
-      + FE_KINDS.filter(k => r[k]).map(k => `<li><span class="d">${dur(r[k])}</span>${k === "giust" ? "con giustificativo" : "da " + FE_NAMES[k]}</li>`).join("");
-    $("feInfoTot").textContent = tot >= WORK ? (!f ? "Giornata intera di smart working" : !sm ? "Giornata intera di ferie" : "Giornata coperta da smart working e ferie")
-      : (f ? `Giornata ridotta: ${dur(f)} di permesso, ` : "") + `${dur(WORK - tot)} di lavoro in sede`;
+      + FE_KINDS.filter(k => r[k]).map(k => `<li><span class="d">${dur(r[k])}</span>${k === "giust" ? "con giustificativo" : "da " + FE_NAMES[k]}</li>`).join("")
+      + (g.festa ? `<li class="sgf"><span class="d">Festa</span>non si lavora</li>` : "")
+      + (g.trasf ? `<li class="sg"><span class="d">Trasferta</span></li>` : "")
+      + (g.notte ? `<li class="sg"><span class="d">Notte</span>fino a ${shortDay(addDays(d, 1))}</li>` : "");
+    $("feInfoTot").textContent = g.festa ? "Giornata di festa, non scala nessun saldo" : !tot ? (g.trasf ? "Giornata di lavoro in trasferta" : "Giornata di lavoro normale") : tot >= WORK ? (!f ? "Giornata intera di smart working" : !sm ? "Giornata intera di ferie" : "Giornata coperta da smart working e ferie")
+      : (f ? `Giornata ridotta: ${dur(f)} di permesso, ` : "") + `${dur(WORK - tot)} di lavoro ${g.trasf ? "in trasferta" : "in sede"}`;
   }
   renderCalendar();
   try { $("feInfo").showModal(); } catch (e) { $("feInfo").setAttribute("open", ""); }
@@ -793,15 +869,15 @@ $("feInfoEdit").addEventListener("click", () => {
   const d = infoSel; $("feInfo").close();
   $("editSw").click(); if (d) openFe(d);
 });
-function closeEdit() { draft = draftFe = null; closeFe(); $("calMsg").textContent = ""; }
+function closeEdit() { draft = draftFe = draftSg = null; closeFe(); $("calMsg").textContent = ""; }
 $("editSw").addEventListener("click", () => {
-  draft = { ...swDays }; draftFe = JSON.parse(JSON.stringify(ferie)); closeFe();
+  draft = { ...swDays }; draftFe = JSON.parse(JSON.stringify(ferie)); draftSg = JSON.parse(JSON.stringify(segni)); closeFe();
   $("calMsg").textContent = ""; renderCalendar();
 });
 $("cancelSw").addEventListener("click", () => { closeEdit(); renderCalendar(); });
 $("saveSw").addEventListener("click", () => {
   if (feSel && !confirmFe()) return; // Salva con il pannello aperto: conferma prima il giorno
-  swDays = draft; ferie = draftFe; write(KEY_SW, swDays); write(KEY_FE, ferie);
+  swDays = draft; ferie = draftFe; segni = draftSg; write(KEY_SW, swDays); write(KEY_FE, ferie); write(KEY_SG, segni);
   closeEdit(); renderMode(); renderMonth(); render();
 });
 // Riempimento rapido del giorno: tutte le 8 ore in smart working o in ferie
@@ -822,20 +898,37 @@ function updFe() {
   const tot = rTot(feForm());
   $("feTot").textContent = `Totale: ${tot ? dur(tot) : "0"} su 8 h` + (tot === WORK ? " · giornata intera" : tot > WORK ? " · troppe ore" : "");
 }
+// Trasferta, Notte, Festa: interruttori nel pannello del giorno. Con Festa le ore non servono.
+const sgForm = () => { const g = {}; SG_KINDS.forEach(k => { if ($("sg_" + k).getAttribute("aria-pressed") === "true") g[k] = 1; }); return g; };
+function updSg() {
+  const g = sgForm();
+  $("feHours").hidden = !!g.festa;
+  $("sgNote").textContent = g.festa ? "Festa: non si lavora e non scala nessun saldo." : g.notte && feSel ? `Notte da ${shortDay(feSel)} a ${shortDay(addDays(feSel, 1))}.` : "";
+}
+SG_KINDS.forEach(k => $("sg_" + k).addEventListener("click", () => {
+  const b = $("sg_" + k); b.setAttribute("aria-pressed", String(b.getAttribute("aria-pressed") !== "true")); $("feMsg").textContent = ""; updSg();
+}));
 function openFe(d) {
   feSel = d;
+  SG_KINDS.forEach(k => $("sg_" + k).setAttribute("aria-pressed", String(!!(draftSg[d] && draftSg[d][k]))));
+  updSg();
   const r = { ...(draftFe[d] || {}), sw: swMin(d, draft) }; // giorno vuoto: tutto a 0
   ALL_KINDS.forEach(k => $("fe_" + k).value = String(r[k] || 0));
   const [y, m, dd] = d.split("-").map(Number);
   $("feDay").textContent = new Date(y, m - 1, dd).toLocaleDateString("it-IT", { weekday: "long", day: "numeric", month: "long" });
-  $("feDel").hidden = !draftFe[d] && !draft[d]; $("feMsg").textContent = "";
+  $("feDel").hidden = !draftFe[d] && !draft[d] && !draftSg[d]; $("feMsg").textContent = "";
   $("fePanel").hidden = false; updFe(); renderCalendar();
   try { $("fePanel").scrollIntoView({ block: "nearest", behavior: "smooth" }); } catch (e) {}
 }
 // Conferma il giorno aperto nel pannello; false se le ore non vanno bene
 function confirmFe() {
+  const sg = sgForm(), anySg = Object.keys(sg).length;
+  if (sg.festa) { // festa: niente ore di smart working, ferie o permessi quel giorno
+    delete draftFe[feSel]; delete draft[feSel]; draftSg[feSel] = sg;
+    closeFe(); renderCalendar(); return true;
+  }
   const r = feForm(), tot = rTot(r);
-  if (!tot) { $("feMsg").textContent = "Scegli quante ore prendere."; return false; }
+  if (!tot && !anySg) { $("feMsg").textContent = "Scegli quante ore prendere, oppure segna trasferta, notte o festa."; return false; }
   if (tot > WORK) { $("feMsg").textContent = `In un giorno puoi prendere al massimo 8 h (ora sono ${dur(tot)}).`; return false; }
   for (const k of ["sw", "ferie"]) { // zainetto e PAR possono andare in negativo
     const av = feAvail(k);
@@ -847,10 +940,11 @@ function confirmFe() {
   const { sw, ...fr } = r; // lo smart working va nel calendario dello smart working, il resto nelle ferie
   if (Object.keys(fr).length) draftFe[feSel] = fr; else delete draftFe[feSel];
   if (sw) draft[feSel] = sw; else delete draft[feSel];
+  if (anySg) draftSg[feSel] = sg; else delete draftSg[feSel];
   closeFe(); renderCalendar(); return true;
 }
 $("feOk").addEventListener("click", confirmFe);
-$("feDel").addEventListener("click", () => { delete draftFe[feSel]; delete draft[feSel]; closeFe(); renderCalendar(); });
+$("feDel").addEventListener("click", () => { delete draftFe[feSel]; delete draft[feSel]; delete draftSg[feSel]; closeFe(); renderCalendar(); });
 $("feClose").addEventListener("click", () => { closeFe(); renderCalendar(); });
 
 // Eliminazione con conferma: primo tocco chiede conferma, secondo elimina
@@ -983,7 +1077,7 @@ $("importLbl").addEventListener("keydown", e => { if (e.key === "Enter" || e.key
 function showBk(msg) { $("bkPanel").hidden = false; $("bkMsg").textContent = msg; }
 $("bkClose").addEventListener("click", () => { $("bkPanel").hidden = true; $("exportText").hidden = true; $("importOk").hidden = true; $("importNo").hidden = true; pendingImport = null; });
 // ===== Backup: esporta e reimporta i dati come file CSV (si apre anche con Excel o Numbers) =====
-const BK_KEYS = [KEY, KEY_DAYS, KEY_USES, KEY_SW, KEY_FE, KEY_SALDI, "orario-extra-open", "orario-tema"];
+const BK_KEYS = [KEY, KEY_DAYS, KEY_USES, KEY_SW, KEY_FE, KEY_SALDI, KEY_SG, "orario-extra-open", "orario-tema"];
 const CSV_HEAD = ["tipo", "data", "ingresso", "inizio_pranzo", "fine_pranzo", "uscita", "minuti", "variazione_saldo", "minuti_ferie", "minuti_zainetto", "minuti_par", "minuti_giustificativo"];
 // Una riga per ogni giornata in sede, giorno di smart working, uso dello zainetto o saldo impostato a mano
 function backupCsv() {
@@ -994,6 +1088,7 @@ function backupCsv() {
     ? ["saldo impostato", u.date, "", "", "", "", u.set, -u.min]
     : ["uso zainetto", u.date, "", "", "", "", u.min, -u.min]));
   Object.keys(ferie).sort().forEach(d => { const r = ferie[d]; rows.push(["ferie", d, "", "", "", "", feMin(d), "", r.ferie || 0, r.zaino || 0, r.par || 0, r.giust || 0]); });
+  Object.keys(segni).sort().forEach(d => SG_KINDS.forEach(k => { if (segni[d][k]) rows.push([{ trasf: "trasferta", notte: "notte", festa: "festa" }[k], d]); }));
   saldi.forEach(x => rows.push([{ par: "saldo par impostato", sw: "saldo smart working impostato" }[x.kind] || "saldo ferie impostato", x.date, "", "", "", "", x.set, -x.min]));
   rows.forEach(r => { while (r.length < CSV_HEAD.length) r.push(""); });
   rows.sort((a, b) => a[1].localeCompare(b[1]));
@@ -1004,7 +1099,7 @@ function parseCsv(text) {
   const sep = lines[0] && lines[0].includes(";") ? ";" : ",";
   const head = (lines.shift() || "").split(sep).map(h => h.trim().toLowerCase());
   if (head[0] !== "tipo" || head[1] !== "data") throw new Error();
-  const nd = {}, ns = {}, nu = [], nf = {}, nsal = [];
+  const nd = {}, ns = {}, nu = [], nf = {}, nsal = [], nsg = {};
   const time = v => /^\d{1,2}:\d{2}$/.test(v) ? v.padStart(5, "0") : "";
   const num = v => { const n = Number(String(v).replace(",", ".")); return Number.isFinite(n) ? Math.round(n) : 0; };
   lines.forEach(l => {
@@ -1013,12 +1108,13 @@ function parseCsv(text) {
     if (!/^\d{4}-\d{2}-\d{2}$/.test(d)) return;
     if (tipo.startsWith("giornata")) nd[d] = { in: time(c[2]), ls: time(c[3]), le: time(c[4]), out: time(c[5]), extra: Math.max(0, num(c[6])) };
     else if (tipo.startsWith("smart")) ns[d] = num(c[6]) > 0 ? Math.min(WORK, num(c[6])) : WORK; // vecchi backup: giornata intera
+    else if (tipo === "trasferta" || tipo === "notte" || tipo === "festa") (nsg[d] = nsg[d] || {})[{ trasferta: "trasf", notte: "notte", festa: "festa" }[tipo]] = 1;
     else if (tipo.startsWith("uso")) nu.push({ date: d, min: Math.abs(num(c[6])) });
     else if (tipo.startsWith("ferie")) { const r = {}; FE_KINDS.forEach((k, i) => { const v = Math.max(0, num(c[8 + i])); if (v) r[k] = v; }); if (Object.keys(r).length) nf[d] = r; }
     else if (tipo.startsWith("saldo ferie") || tipo.startsWith("saldo par") || tipo.startsWith("saldo smart")) nsal.push({ date: d, kind: tipo.startsWith("saldo par") ? "par" : tipo.startsWith("saldo smart") ? "sw" : "ferie", min: -num(c[7]), set: num(c[6]) });
     else if (tipo.startsWith("saldo")) nu.push({ date: d, min: -num(c[7]), set: num(c[6]) });
   });
-  return { [KEY_DAYS]: JSON.stringify(nd), [KEY_SW]: JSON.stringify(ns), [KEY_USES]: JSON.stringify(nu), [KEY_FE]: JSON.stringify(nf), [KEY_SALDI]: JSON.stringify(nsal), _info: [Object.keys(nd).length, Object.keys(ns).length, Object.keys(nf).length] };
+  return { [KEY_DAYS]: JSON.stringify(nd), [KEY_SW]: JSON.stringify(ns), [KEY_USES]: JSON.stringify(nu), [KEY_FE]: JSON.stringify(nf), [KEY_SALDI]: JSON.stringify(nsal), [KEY_SG]: JSON.stringify(nsg), _info: [Object.keys(nd).length, Object.keys(ns).length, Object.keys(nf).length] };
 }
 $("exportBtn").addEventListener("click", async () => {
   closeMenu();
@@ -1071,7 +1167,7 @@ $("importNo").addEventListener("click", () => { pendingImport = null; $("importO
 $("importOk").addEventListener("click", () => {
   if (!pendingImport) return;
   try {
-    [KEY_DAYS, KEY_USES, KEY_SW, KEY_FE, KEY_SALDI].forEach(k => localStorage.removeItem(k));
+    [KEY_DAYS, KEY_USES, KEY_SW, KEY_FE, KEY_SALDI, KEY_SG].forEach(k => localStorage.removeItem(k));
     Object.entries(pendingImport).forEach(([k, v]) => { if (BK_KEYS.includes(k)) localStorage.setItem(k, v); });
   } catch (e) { showBk("Non riesco a salvare i dati su questo dispositivo."); return; }
   location.reload();
