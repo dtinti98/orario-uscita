@@ -742,25 +742,29 @@ function drawNights() {
   const btns = [...g.querySelectorAll("[data-day]")];
   if (!btns.length) return;
   const step = btns[0].getBoundingClientRect().width + (parseFloat(getComputedStyle(g).columnGap) || 0); // distanza tra due colonne
-  // Arco da (x0) a (x0 + step - w/2): parte e arriva sul bordo alto dei due cerchi, sale nello spazio tra le righe
-  const geo = (a, x0) => { const y = a.top + a.w * 0.07, x2 = x0 + step - a.w * 0.5, c = { x: (x0 + x2) / 2, y: a.top - a.w * 0.36 }; return { y, x2, c }; };
+  // Le mezze circonferenze rosse hanno raggio R; l'arco arancione parte e arriva esattamente sul loro bordo, a 60° dall'orizzontale
+  const R = a => a.w / 2 + 1.5, cyOf = a => a.top + a.w / 2;
+  const joint = (cx, a, right) => ({ x: cx + (right ? 0.5 : -0.5) * R(a), y: cyOf(a) - 0.866 * R(a) });
+  // Ogni metà parte dal punto d'appoggio (due pezzi) così il tratteggio tocca l'arco
+  const half = (a, right) => { const r = R(a), cy = cyOf(a), j = joint(a.x, a, right);
+    return `<path class="half" d="M${j.x} ${j.y} A${r} ${r} 0 0 ${right ? 0 : 1} ${a.x} ${cy - r}"/><path class="half" d="M${j.x} ${j.y} A${r} ${r} 0 0 ${right ? 1 : 0} ${a.x} ${cy + r}"/>`; };
+  const curve = (a, cx) => { const p0 = joint(cx, a, true), p2 = joint(cx + step, a, false), c = { x: (p0.x + p2.x) / 2, y: a.top - a.w * 0.3 };
+    return { p0, p2, c, m: { x: (p0.x + 2 * c.x + p2.x) / 4, y: (p0.y + 2 * c.y + p2.y) / 4 } }; };
   let out = "";
-  const half = (a, right) => { const r = a.w / 2 + 1.5, cy = a.top + a.w / 2; return `<path class="half" d="M${a.x} ${cy - r} A${r} ${r} 0 0 ${right ? 1 : 0} ${a.x} ${cy + r}"/>`; };
   btns.forEach(b => {
-    const k = b.dataset.day, a = pos(k);
-    if (sgs[k] && sgs[k].notte) out += half(a, true);
-    if (sgs[addDays(k, -1)] && sgs[addDays(k, -1)].notte) out += half(a, false);
+    const k = b.dataset.day, a = pos(k), pk = addDays(k, -1);
     if (sgs[k] && sgs[k].notte) {
-      const x0 = a.x + a.w * 0.25, { y, x2, c } = geo(a, x0), n = pos(addDays(k, 1));
-      if (n && Math.abs(n.top - a.top) < 2) out += `<path d="M${x0} ${y} Q${c.x} ${c.y} ${x2} ${y}"/>`;
-      else { const m = { x: (x0 + 2 * c.x + x2) / 4, y: (y + 2 * c.y + y) / 4 }; out += `<path d="M${x0} ${y} Q${(x0 + c.x) / 2} ${(y + c.y) / 2} ${m.x} ${m.y}"/>`; }
+      out += half(a, true);
+      const { p0, p2, c, m } = curve(a, a.x), n = pos(addDays(k, 1));
+      out += n && Math.abs(n.top - a.top) < 2 ? `<path d="M${p0.x} ${p0.y} Q${c.x} ${c.y} ${p2.x} ${p2.y}"/>`
+        : `<path d="M${p0.x} ${p0.y} Q${(p0.x + c.x) / 2} ${(p0.y + c.y) / 2} ${m.x} ${m.y}"/>`; // fine riga o fine mese: l'arco esce dal bordo
     }
-    const pk = addDays(k, -1);
-    if (sgs[pk] && sgs[pk].notte) { // notte che arriva dal giorno prima, se il giorno prima è su un'altra riga o in un altro mese
+    if (sgs[pk] && sgs[pk].notte) {
+      out += half(a, false);
       const p = pos(pk);
-      if (!p || Math.abs(p.top - a.top) >= 2) {
-        const x0 = a.x - step + a.w * 0.25, { y, x2, c } = geo(a, x0), m = { x: (x0 + 2 * c.x + x2) / 4, y: (y + 2 * c.y + y) / 4 };
-        out += `<path d="M${m.x} ${m.y} Q${(c.x + x2) / 2} ${(c.y + y) / 2} ${x2} ${y}"/>`;
+      if (!p || Math.abs(p.top - a.top) >= 2) { // notte che arriva da un'altra riga o dal mese prima
+        const { p2, c, m } = curve(a, a.x - step);
+        out += `<path d="M${p2.x} ${p2.y} Q${(c.x + p2.x) / 2} ${(c.y + p2.y) / 2} ${m.x} ${m.y}"/>`;
       }
     }
   });
