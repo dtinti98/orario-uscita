@@ -305,6 +305,7 @@ button.editbal { align-self: flex-start; margin-top: auto; padding: 5px 12px; fo
 .cal-grid button.festa, .cal-grid button.festa.plan { background: var(--festa); color: var(--surface); border: 1.5px solid var(--festa); }
 .nights { position: absolute; left: 0; top: 0; pointer-events: none; overflow: visible; }
 .nights path { fill: none; stroke: var(--tr); stroke-width: 2; stroke-dasharray: 4 3; stroke-linecap: round; }
+.nights path.half { stroke: var(--festa); stroke-dasharray: 3 3; } /* mezze circonferenze rosse: sera del giorno e mattina dopo */
 .legend .l7 { background: var(--tr); } .legend .l9 { background: var(--festa); }
 .legend .l8 { width: 18px; height: 8px; border: 2px dashed var(--tr); border-bottom: 0; border-radius: 10px 10px 0 0; box-sizing: border-box; vertical-align: 0; }
 .segni { display: flex; flex-wrap: wrap; gap: 8px; }
@@ -730,7 +731,9 @@ function renderCalendar() {
   $("calGrid").innerHTML = html;
   drawNights();
 }
-// Notti: arco tratteggiato arancione tra il giorno e quello dopo (a fine riga o fine mese l'arco esce dal bordo)
+// Notti: arco tratteggiato arancione tra il giorno e quello dopo (a fine riga o fine mese l'arco esce dal bordo);
+// sotto l'arco una mezza circonferenza rossa tratteggiata a destra del giorno (sera) e a sinistra del giorno dopo (mattina),
+// così il colore dei due giorni resta visibile
 function drawNights() {
   const g = $("calGrid"), sgs = draftSg || segni, gr = g.getBoundingClientRect();
   g.querySelectorAll(".nights").forEach(n => n.remove());
@@ -742,8 +745,11 @@ function drawNights() {
   // Arco da (x0) a (x0 + step - w/2): parte e arriva sul bordo alto dei due cerchi, sale nello spazio tra le righe
   const geo = (a, x0) => { const y = a.top + a.w * 0.07, x2 = x0 + step - a.w * 0.5, c = { x: (x0 + x2) / 2, y: a.top - a.w * 0.36 }; return { y, x2, c }; };
   let out = "";
+  const half = (a, right) => { const r = a.w / 2 + 1.5, cy = a.top + a.w / 2; return `<path class="half" d="M${a.x} ${cy - r} A${r} ${r} 0 0 ${right ? 1 : 0} ${a.x} ${cy + r}"/>`; };
   btns.forEach(b => {
     const k = b.dataset.day, a = pos(k);
+    if (sgs[k] && sgs[k].notte) out += half(a, true);
+    if (sgs[addDays(k, -1)] && sgs[addDays(k, -1)].notte) out += half(a, false);
     if (sgs[k] && sgs[k].notte) {
       const x0 = a.x + a.w * 0.25, { y, x2, c } = geo(a, x0), n = pos(addDays(k, 1));
       if (n && Math.abs(n.top - a.top) < 2) out += `<path d="M${x0} ${y} Q${c.x} ${c.y} ${x2} ${y}"/>`;
