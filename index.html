@@ -305,13 +305,7 @@ button.editbal { align-self: flex-start; margin-top: auto; padding: 5px 12px; fo
 .cal-grid button.festa, .cal-grid button.festa.plan { background: transparent; color: var(--festa); border: 2px dashed var(--festa); }
 .nights { position: absolute; left: 0; top: 0; pointer-events: none; overflow: visible; }
 .nights path { fill: none; stroke: var(--tr); stroke-width: 2; stroke-dasharray: 4 3; stroke-linecap: round; }
-/* Giorno con una notte su un lato: quella metà resta vuota (solo il tratteggio rosso), l'altra metà ha il colore del giorno.
-   Con notti su entrambi i lati il giorno resta pieno. */
-.cal-grid button.nr:not(.nl), .cal-grid button.nl:not(.nr) { z-index: 0; color: var(--fg); }
-.cal-grid button.nr:not(.nl)::before, .cal-grid button.nl:not(.nr)::before { content: ""; position: absolute; top: -4px; bottom: -4px; width: calc(50% + 4px); background: var(--surface); z-index: -1; }
-.cal-grid button.nr:not(.nl)::before { left: 50%; border-radius: 0 999px 999px 0; }
-.cal-grid button.nl:not(.nr)::before { right: 50%; border-radius: 999px 0 0 999px; }
-.nights path.half { stroke: var(--festa); stroke-dasharray: 3 3; } /* mezze circonferenze rosse: sera del giorno e mattina dopo */
+.nights path.half { stroke: var(--festa); stroke-width: 2.4; stroke-dasharray: 3.5 2.5; } /* mezze circonferenze rosse: sera del giorno e mattina dopo */
 .legend .l7 { background: var(--tr); } .legend .l9 { border: 2px dashed var(--festa); box-sizing: border-box; }
 .legend .l8 { width: 18px; height: 8px; border: 2px dashed var(--tr); border-bottom: 0; border-radius: 10px 10px 0 0; box-sizing: border-box; vertical-align: 0; }
 .segni { display: flex; flex-wrap: wrap; gap: 8px; }
@@ -728,7 +722,7 @@ function renderCalendar() {
     const key = `${viewMonth}-${pad(d)}`, wd = (offset + d - 1) % 7;
     const g = sgs[key] || {}, fs = !!g.festa, f = fs ? 0 : feMin(key, fset), sm = fs ? 0 : swMin(key, set), any = !!(sm || f || g.trasf || g.notte || fs);
     const cls = [wd >= 5 ? "we" : "", key === t ? "today" : "", fs ? "festa" : "", sm ? (sm >= WORK || f ? "sw" : "swp") : "", f ? (f >= WORK ? "fe" : "fe part") : "",
-      g.trasf && !fs ? (sm || f ? "trx" : "tr") : "", any && key > t ? "plan" : "", g.notte ? "nr" : "", (sgs[addDays(key, -1)] || {}).notte ? "nl" : "", key === feSel || key === infoSel ? "sel" : ""].filter(Boolean).join(" ");
+      g.trasf && !fs ? (sm || f ? "trx" : "tr") : "", any && key > t ? "plan" : "",  key === feSel || key === infoSel ? "sel" : ""].filter(Boolean).join(" ");
     const parts = [fs ? "festa" : "", sm ? (sm >= WORK ? "smart working" : `smart working ${dur(sm)}`) : "", f ? (f >= WORK ? "ferie" : `giornata ridotta, ${dur(f)} di permesso`) : "",
       g.trasf ? "trasferta" : "", g.notte ? "notte fino al giorno dopo" : "", any && key > t && !fs ? "programmato" : ""];
     const lbl = [d, ...parts.filter(Boolean)].join(", ");
@@ -749,7 +743,7 @@ function drawNights() {
   if (!btns.length) return;
   const step = btns[0].getBoundingClientRect().width + (parseFloat(getComputedStyle(g).columnGap) || 0); // distanza tra due colonne
   // Le mezze circonferenze rosse hanno raggio R; l'arco arancione parte e arriva esattamente sul loro bordo, a 60° dall'orizzontale
-  const R = a => a.w / 2 + 1.5, cyOf = a => a.top + a.w / 2;
+  const R = a => a.w / 2 + 2.5, cyOf = a => a.top + a.w / 2;
   const joint = (cx, a, right) => ({ x: cx + (right ? 0.5 : -0.5) * R(a), y: cyOf(a) - 0.866 * R(a) });
   // Ogni metà parte dal punto d'appoggio (due pezzi) così il tratteggio tocca l'arco
   const half = (a, right) => { const r = R(a), cy = cyOf(a), j = joint(a.x, a, right);
