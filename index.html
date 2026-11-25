@@ -297,12 +297,12 @@ button.editbal { align-self: flex-start; margin-top: auto; padding: 5px 12px; fo
 .cal-grid button.swp { background: transparent; color: var(--sw); border: 2px solid var(--sw); }
 .cal-grid button.swp.plan { border-style: dashed; }
 .legend .l6 { border: 2px solid var(--sw); box-sizing: border-box; }
-/* Trasferte e notti in arancione, feste in rosso pieno (anche se programmate) */
+/* Trasferte e notti in arancione, feste solo tratteggiate in rosso con il numero rosso */
 .cal-grid { position: relative; }
 .cal-grid button.tr { background: var(--tr); color: var(--surface); }
 .cal-grid button.tr.plan { background: var(--tr-soft); color: var(--tr); border: 1.5px dashed var(--tr); }
 .cal-grid button.trx { box-shadow: 0 0 0 2.5px var(--tr); }
-.cal-grid button.festa, .cal-grid button.festa.plan { background: var(--festa); color: var(--surface); border: 1.5px solid var(--festa); }
+.cal-grid button.festa, .cal-grid button.festa.plan { background: transparent; color: var(--festa); border: 2px dashed var(--festa); }
 .nights { position: absolute; left: 0; top: 0; pointer-events: none; overflow: visible; }
 .nights path { fill: none; stroke: var(--tr); stroke-width: 2; stroke-dasharray: 4 3; stroke-linecap: round; }
 /* Giorno con una notte su un lato: quella metà resta vuota (solo il tratteggio rosso), l'altra metà ha il colore del giorno.
@@ -312,7 +312,7 @@ button.editbal { align-self: flex-start; margin-top: auto; padding: 5px 12px; fo
 .cal-grid button.nr:not(.nl)::before { left: 50%; border-radius: 0 999px 999px 0; }
 .cal-grid button.nl:not(.nr)::before { right: 50%; border-radius: 999px 0 0 999px; }
 .nights path.half { stroke: var(--festa); stroke-dasharray: 3 3; } /* mezze circonferenze rosse: sera del giorno e mattina dopo */
-.legend .l7 { background: var(--tr); } .legend .l9 { background: var(--festa); }
+.legend .l7 { background: var(--tr); } .legend .l9 { border: 2px dashed var(--festa); box-sizing: border-box; }
 .legend .l8 { width: 18px; height: 8px; border: 2px dashed var(--tr); border-bottom: 0; border-radius: 10px 10px 0 0; box-sizing: border-box; vertical-align: 0; }
 .segni { display: flex; flex-wrap: wrap; gap: 8px; }
 .segni button { padding: 7px 14px; font-size: 13px; color: var(--tr); border: 1.5px dashed var(--tr); background: var(--surface); }
@@ -322,7 +322,7 @@ button.editbal { align-self: flex-start; margin-top: auto; padding: 5px 12px; fo
 .fehours { display: flex; flex-direction: column; gap: 10px; }
 .fehours[hidden] { display: none; }
 .stat.tr .label { color: var(--tr); }
-.fedlg .felist li.sg { background: var(--tr-soft); } .fedlg .felist li.sgf { background: var(--festa); color: var(--surface); }
+.fedlg .felist li.sg { background: var(--tr-soft); } .fedlg .felist li.sgf { background: transparent; border: 2px dashed var(--festa); color: var(--festa); }
 .signbtn { width: 40px; height: 40px; padding: 0; font: 700 20px/1 var(--display); }
 .signbtn[aria-pressed="true"] { color: var(--warn); border-color: var(--warn); }
 .log .sw-t { font-weight: 600; color: var(--sw); }
